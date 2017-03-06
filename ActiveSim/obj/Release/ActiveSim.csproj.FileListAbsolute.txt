@@ -1,0 +1,11 @@
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.exe.config
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Release\aw.dll
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Release\activesim.db
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.exe
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.pdb
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Release\AW.Core.dll
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.Form1.resources
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.Properties.Resources.resources
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.csproj.GenerateResource.Cache
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.exe
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.pdb
