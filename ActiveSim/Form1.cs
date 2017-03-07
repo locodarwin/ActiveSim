@@ -94,15 +94,18 @@ namespace ActiveSim
 
         private void butLoginUniv_Click(object sender, EventArgs e)
         {
-            Chat(1, "Speaker", "Message", "green");
-            Stat(1, "Action", "Message", "color");
+            //Chat(1, "Speaker", "Message", "green");
+            Stat(1, "Log In", "Opening the login manager", "color");
+
+            Form2 frm = new Form2();
+            frm.Show();
 
             // do a test query of the database
-            string sql = "select * from LoginProfiles where ProfileName = 'Default'";
-            SQLiteCommand cmd = new SQLiteCommand(sql, Globals.m_db);
-            SQLiteDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
-                Console.WriteLine("Name: " + reader["LoginUniv"] + "\tScore: " + reader["LoginName"]);
+            //string sql = "select * from LoginProfiles where ProfileName = 'Default'";
+            //SQLiteCommand cmd = new SQLiteCommand(sql, Globals.m_db);
+            //SQLiteDataReader reader = cmd.ExecuteReader();
+            //while (reader.Read())
+            //    Console.WriteLine("Name: " + reader["LoginUniv"] + "\tScore: " + reader["LoginName"]);
 
         }
 

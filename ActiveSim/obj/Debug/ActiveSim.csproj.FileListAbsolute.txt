@@ -9,3 +9,5 @@ C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Deb
 C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Debug\ActiveSim.pdb
 C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Debug\AW.Core.dll
 C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Debug\activesim.db
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Debug\aw.dll
+C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Debug\ActiveSim.Form2.resources
