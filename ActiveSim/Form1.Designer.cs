@@ -44,6 +44,7 @@
             this.butSimStart = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.StatMon = new System.Windows.Forms.ListView();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -203,12 +204,23 @@
             this.StatMon.TabIndex = 0;
             this.StatMon.UseCompatibleStateImageBehavior = false;
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.BackColor = System.Drawing.SystemColors.Control;
+            this.statusStrip1.Location = new System.Drawing.Point(0, 619);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1005, 22);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 8;
+            this.statusStrip1.Text = "statStrip";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(1005, 619);
+            this.ClientSize = new System.Drawing.Size(1005, 641);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -226,6 +238,7 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -247,7 +260,7 @@
         private System.Windows.Forms.Button butSendChat;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListView StatMon;
-
+        private System.Windows.Forms.StatusStrip statusStrip1;
     }
 }
 

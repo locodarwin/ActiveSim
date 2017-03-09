@@ -142,6 +142,5 @@ namespace ActiveSim
             //temp.SubItems.Add("Hello, cruel world!", System.Drawing.Color.Red, System.Drawing.Color.Black);  //fucked
             StatMon.Items.Add(temp);
         }
-
     }
 }

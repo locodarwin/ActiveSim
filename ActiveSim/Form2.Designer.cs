@@ -34,23 +34,23 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.txtHost = new System.Windows.Forms.TextBox();
+            this.txtPort = new System.Windows.Forms.TextBox();
+            this.txtCitnum = new System.Windows.Forms.TextBox();
+            this.txtPassword = new System.Windows.Forms.TextBox();
+            this.txtBotname = new System.Windows.Forms.TextBox();
+            this.txtWorld = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.txtX = new System.Windows.Forms.TextBox();
+            this.txtZ = new System.Windows.Forms.TextBox();
+            this.txtAV = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox11 = new System.Windows.Forms.TextBox();
+            this.txtY = new System.Windows.Forms.TextBox();
+            this.txtYaw = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -116,47 +116,47 @@
             this.label6.Text = "World:";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBox1
+            // txtHost
             // 
-            this.textBox1.Location = new System.Drawing.Point(101, 11);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(138, 20);
-            this.textBox1.TabIndex = 6;
+            this.txtHost.Location = new System.Drawing.Point(101, 11);
+            this.txtHost.Name = "txtHost";
+            this.txtHost.Size = new System.Drawing.Size(138, 20);
+            this.txtHost.TabIndex = 6;
             // 
-            // textBox2
+            // txtPort
             // 
-            this.textBox2.Location = new System.Drawing.Point(101, 38);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(64, 20);
-            this.textBox2.TabIndex = 7;
+            this.txtPort.Location = new System.Drawing.Point(101, 38);
+            this.txtPort.Name = "txtPort";
+            this.txtPort.Size = new System.Drawing.Size(64, 20);
+            this.txtPort.TabIndex = 7;
             // 
-            // textBox3
+            // txtCitnum
             // 
-            this.textBox3.Location = new System.Drawing.Point(101, 65);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(89, 20);
-            this.textBox3.TabIndex = 8;
+            this.txtCitnum.Location = new System.Drawing.Point(101, 65);
+            this.txtCitnum.Name = "txtCitnum";
+            this.txtCitnum.Size = new System.Drawing.Size(89, 20);
+            this.txtCitnum.TabIndex = 8;
             // 
-            // textBox4
+            // txtPassword
             // 
-            this.textBox4.Location = new System.Drawing.Point(101, 92);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(116, 20);
-            this.textBox4.TabIndex = 9;
+            this.txtPassword.Location = new System.Drawing.Point(101, 92);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.Size = new System.Drawing.Size(116, 20);
+            this.txtPassword.TabIndex = 9;
             // 
-            // textBox5
+            // txtBotname
             // 
-            this.textBox5.Location = new System.Drawing.Point(101, 119);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(116, 20);
-            this.textBox5.TabIndex = 10;
+            this.txtBotname.Location = new System.Drawing.Point(101, 119);
+            this.txtBotname.Name = "txtBotname";
+            this.txtBotname.Size = new System.Drawing.Size(116, 20);
+            this.txtBotname.TabIndex = 10;
             // 
-            // textBox6
+            // txtWorld
             // 
-            this.textBox6.Location = new System.Drawing.Point(101, 146);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(116, 20);
-            this.textBox6.TabIndex = 11;
+            this.txtWorld.Location = new System.Drawing.Point(101, 146);
+            this.txtWorld.Name = "txtWorld";
+            this.txtWorld.Size = new System.Drawing.Size(116, 20);
+            this.txtWorld.TabIndex = 11;
             // 
             // label7
             // 
@@ -188,26 +188,26 @@
             this.label9.Text = "Avatar #:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBox7
+            // txtX
             // 
-            this.textBox7.Location = new System.Drawing.Point(311, 11);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(58, 20);
-            this.textBox7.TabIndex = 15;
+            this.txtX.Location = new System.Drawing.Point(311, 11);
+            this.txtX.Name = "txtX";
+            this.txtX.Size = new System.Drawing.Size(58, 20);
+            this.txtX.TabIndex = 15;
             // 
-            // textBox8
+            // txtZ
             // 
-            this.textBox8.Location = new System.Drawing.Point(311, 38);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(58, 20);
-            this.textBox8.TabIndex = 16;
+            this.txtZ.Location = new System.Drawing.Point(311, 38);
+            this.txtZ.Name = "txtZ";
+            this.txtZ.Size = new System.Drawing.Size(58, 20);
+            this.txtZ.TabIndex = 16;
             // 
-            // textBox9
+            // txtAV
             // 
-            this.textBox9.Location = new System.Drawing.Point(311, 65);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(48, 20);
-            this.textBox9.TabIndex = 17;
+            this.txtAV.Location = new System.Drawing.Point(311, 65);
+            this.txtAV.Name = "txtAV";
+            this.txtAV.Size = new System.Drawing.Size(48, 20);
+            this.txtAV.TabIndex = 17;
             // 
             // label10
             // 
@@ -238,19 +238,19 @@
             this.button1.Text = "Defaults";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // textBox10
+            // txtY
             // 
-            this.textBox10.Location = new System.Drawing.Point(442, 11);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(57, 20);
-            this.textBox10.TabIndex = 21;
+            this.txtY.Location = new System.Drawing.Point(442, 11);
+            this.txtY.Name = "txtY";
+            this.txtY.Size = new System.Drawing.Size(57, 20);
+            this.txtY.TabIndex = 21;
             // 
-            // textBox11
+            // txtYaw
             // 
-            this.textBox11.Location = new System.Drawing.Point(442, 38);
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(57, 20);
-            this.textBox11.TabIndex = 22;
+            this.txtYaw.Location = new System.Drawing.Point(442, 38);
+            this.txtYaw.Name = "txtYaw";
+            this.txtYaw.Size = new System.Drawing.Size(57, 20);
+            this.txtYaw.TabIndex = 22;
             // 
             // button2
             // 
@@ -287,23 +287,23 @@
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.textBox11);
-            this.Controls.Add(this.textBox10);
+            this.Controls.Add(this.txtYaw);
+            this.Controls.Add(this.txtY);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.textBox9);
-            this.Controls.Add(this.textBox8);
-            this.Controls.Add(this.textBox7);
+            this.Controls.Add(this.txtAV);
+            this.Controls.Add(this.txtZ);
+            this.Controls.Add(this.txtX);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.textBox6);
-            this.Controls.Add(this.textBox5);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtWorld);
+            this.Controls.Add(this.txtBotname);
+            this.Controls.Add(this.txtPassword);
+            this.Controls.Add(this.txtCitnum);
+            this.Controls.Add(this.txtPort);
+            this.Controls.Add(this.txtHost);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -326,23 +326,23 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox txtHost;
+        private System.Windows.Forms.TextBox txtPort;
+        private System.Windows.Forms.TextBox txtCitnum;
+        private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.TextBox txtBotname;
+        private System.Windows.Forms.TextBox txtWorld;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.TextBox txtX;
+        private System.Windows.Forms.TextBox txtZ;
+        private System.Windows.Forms.TextBox txtAV;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.TextBox textBox11;
+        private System.Windows.Forms.TextBox txtY;
+        private System.Windows.Forms.TextBox txtYaw;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
