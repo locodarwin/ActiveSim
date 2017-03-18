@@ -106,6 +106,10 @@ namespace ActiveSim
             //SQLiteDataReader reader = cmd.ExecuteReader();
             //while (reader.Read())
             //    Console.WriteLine("Name: " + reader["LoginUniv"] + "\tScore: " + reader["LoginName"]);
+            Stat(1, "Log In", "Logging into universe", "color");
+
+            // Proceed with login
+
 
         }
 

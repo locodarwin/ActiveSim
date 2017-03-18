@@ -49,5 +49,25 @@ namespace ActiveSim
             txtAV.Text = Convert.ToString(Form1.Globals.iAV);
 
         }
+
+        private void butLogin_Click(object sender, EventArgs e)
+        {
+            // Populate login globals with form contents
+            Form1.Globals.sUnivLogin = txtHost.Text;
+            Form1.Globals.iPort = Convert.ToInt32(txtPort.Text);
+            Form1.Globals.sBotName = txtBotname.Text;
+            Form1.Globals.iCitNum = Convert.ToInt32(txtCitnum.Text);
+            Form1.Globals.sPassword = txtPassword.Text;
+            Form1.Globals.sWorld = txtWorld.Text;
+            Form1.Globals.iXPos = Convert.ToInt32(txtX.Text);
+            Form1.Globals.iYPos = Convert.ToInt32(txtY.Text);
+            Form1.Globals.iZPos = Convert.ToInt32(txtZ.Text);
+            Form1.Globals.iYaw = Convert.ToInt32(txtYaw.Text);
+            Form1.Globals.iAV = Convert.ToInt32(txtAV.Text);
+
+            // Then close the form so form1 can perform the login
+            this.Close();
+
+        }
     }
 }

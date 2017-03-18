@@ -48,12 +48,12 @@
             this.txtAV = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.butDefaults = new System.Windows.Forms.Button();
             this.txtY = new System.Windows.Forms.TextBox();
             this.txtYaw = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.butLoad = new System.Windows.Forms.Button();
+            this.butSave = new System.Windows.Forms.Button();
+            this.butLogin = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -229,14 +229,14 @@
             this.label11.Text = "Rotation:";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // button1
+            // butDefaults
             // 
-            this.button1.Location = new System.Drawing.Point(393, 65);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(106, 27);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "Defaults";
-            this.button1.UseVisualStyleBackColor = true;
+            this.butDefaults.Location = new System.Drawing.Point(393, 65);
+            this.butDefaults.Name = "butDefaults";
+            this.butDefaults.Size = new System.Drawing.Size(106, 27);
+            this.butDefaults.TabIndex = 20;
+            this.butDefaults.Text = "Defaults";
+            this.butDefaults.UseVisualStyleBackColor = true;
             // 
             // txtY
             // 
@@ -252,44 +252,45 @@
             this.txtYaw.Size = new System.Drawing.Size(57, 20);
             this.txtYaw.TabIndex = 22;
             // 
-            // button2
+            // butLoad
             // 
-            this.button2.Location = new System.Drawing.Point(272, 109);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(97, 30);
-            this.button2.TabIndex = 23;
-            this.button2.Text = "Load Profile";
-            this.button2.UseVisualStyleBackColor = true;
+            this.butLoad.Location = new System.Drawing.Point(272, 109);
+            this.butLoad.Name = "butLoad";
+            this.butLoad.Size = new System.Drawing.Size(97, 30);
+            this.butLoad.TabIndex = 23;
+            this.butLoad.Text = "Load Profile";
+            this.butLoad.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // butSave
             // 
-            this.button3.Location = new System.Drawing.Point(272, 138);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(97, 28);
-            this.button3.TabIndex = 24;
-            this.button3.Text = "Save Profile";
-            this.button3.UseVisualStyleBackColor = true;
+            this.butSave.Location = new System.Drawing.Point(272, 138);
+            this.butSave.Name = "butSave";
+            this.butSave.Size = new System.Drawing.Size(97, 28);
+            this.butSave.TabIndex = 24;
+            this.butSave.Text = "Save Profile";
+            this.butSave.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // butLogin
             // 
-            this.button4.Location = new System.Drawing.Point(379, 109);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(120, 57);
-            this.button4.TabIndex = 25;
-            this.button4.Text = "Log In";
-            this.button4.UseVisualStyleBackColor = true;
+            this.butLogin.Location = new System.Drawing.Point(379, 109);
+            this.butLogin.Name = "butLogin";
+            this.butLogin.Size = new System.Drawing.Size(120, 57);
+            this.butLogin.TabIndex = 25;
+            this.butLogin.Text = "Log In";
+            this.butLogin.UseVisualStyleBackColor = true;
+            this.butLogin.Click += new System.EventHandler(this.butLogin_Click);
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(509, 180);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.butLogin);
+            this.Controls.Add(this.butSave);
+            this.Controls.Add(this.butLoad);
             this.Controls.Add(this.txtYaw);
             this.Controls.Add(this.txtY);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.butDefaults);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.txtAV);
@@ -340,11 +341,11 @@
         private System.Windows.Forms.TextBox txtAV;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button butDefaults;
         private System.Windows.Forms.TextBox txtY;
         private System.Windows.Forms.TextBox txtYaw;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button butLoad;
+        private System.Windows.Forms.Button butSave;
+        private System.Windows.Forms.Button butLogin;
     }
 }
