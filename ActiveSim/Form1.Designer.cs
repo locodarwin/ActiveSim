@@ -68,6 +68,7 @@
             this.butLoginWorld.TabIndex = 1;
             this.butLoginWorld.Text = "Log Into World";
             this.butLoginWorld.UseVisualStyleBackColor = true;
+            this.butLoginWorld.Click += new System.EventHandler(this.butLoginWorld_Click);
             // 
             // butLogOut
             // 
@@ -77,6 +78,7 @@
             this.butLogOut.TabIndex = 2;
             this.butLogOut.Text = "Log Out";
             this.butLogOut.UseVisualStyleBackColor = true;
+            this.butLogOut.Click += new System.EventHandler(this.butLogOut_Click);
             // 
             // butMove2Coords
             // 
@@ -123,6 +125,7 @@
             this.butSendChat.TabIndex = 1;
             this.butSendChat.Text = "Send To Chat";
             this.butSendChat.UseVisualStyleBackColor = true;
+            this.butSendChat.Click += new System.EventHandler(this.butSendChat_Click);
             // 
             // ChatMon
             // 
