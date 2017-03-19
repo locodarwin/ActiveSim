@@ -19,12 +19,12 @@ namespace ActiveSim
             // Set up the columns in the listviews (ChatMon and StatMon)
             ChatMon.View = View.Details;
             ChatMon.Columns.Add("Time (Local)", 120, HorizontalAlignment.Left);
-            ChatMon.Columns.Add("Speaker", 120, HorizontalAlignment.Left);
+            ChatMon.Columns.Add("Speaker", 110, HorizontalAlignment.Left);
             ChatMon.Columns.Add("Message", 480, HorizontalAlignment.Left);
 
             StatMon.View = View.Details;
             StatMon.Columns.Add("Time (Local)", 120, HorizontalAlignment.Left);
-            StatMon.Columns.Add("Action", 120, HorizontalAlignment.Left);
+            StatMon.Columns.Add("Action", 110, HorizontalAlignment.Left);
             StatMon.Columns.Add("Message", 480, HorizontalAlignment.Left);
 
             // Disable all buttons except universe login
@@ -37,17 +37,23 @@ namespace ActiveSim
             butSimStart.Enabled = false;
             butSimStatus.Enabled = false;
             butSimStop.Enabled = false;
-          
+
             // Open the database
             Globals.m_db = new SQLiteConnection("data source=activesim.db;version=3");
             Globals.m_db.Open();
 
+            Stat(1, "Startup", Globals.sAppName + " " + Globals.sVersion + " - " + Globals.sByline + ".", "black");
+            Stat(1, "Startup", "Bot started and ready to log in.", "black");
 
         }
 
         // Class for the public global variables
         public static class Globals
         {
+            public static string sAppName = "ActiveSim";
+            public static string sVersion = "v1.0";
+            public static string sByline = "Copyright 2017 by Locodarwin";
+
             public static string sUnivLogin = "auth.activeworlds.com";
             public static int iPort = 6670;
             public static string sBotName = "ActiveSim";
@@ -72,7 +78,7 @@ namespace ActiveSim
         // The form's starting point
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
             // Initialize and start the timer
             aTimer = new Timer();
             aTimer.Tick += new EventHandler(aTimer_Tick);
@@ -83,14 +89,14 @@ namespace ActiveSim
 
 
 
-        
+
         private void butLoginUniv_Click(object sender, EventArgs e)
         {
-            
+
             // Are we already logged in? Abort if so
             if (Globals.iInUniv == true)
             {
-                Stat(1, "Error", "Already logged in!", "color");
+                Stat(1, "Error", "Already logged in!", "red");
                 return;
             }
 
@@ -98,16 +104,16 @@ namespace ActiveSim
             butLoginUniv.Enabled = false;
 
             // Open the login manager form
-            Stat(1, "Log In", "Opening the login manager", "color");
+            Stat(1, "Login Manager", "Opening the login manager.", "black");
             Form2 frm = new Form2();
             frm.ShowDialog();
 
             // Init the AW API
-            Stat(1, "Init", "Initializing the AW API", "color");
+            Stat(1, "API Init", "Initializing the AW API.", "black");
             _instance = new Instance();
 
             // Install events & callbacks
-            Stat(1, "Init", "Installing events and callbacks.", "color");
+            Stat(1, "API Init", "Installing events and callbacks.", "black");
             //_instance.EventAvatarAdd += OnEventAvatarAdd;
             _instance.EventChat += OnEventChat;
 
@@ -118,16 +124,16 @@ namespace ActiveSim
             _instance.Attributes.LoginApplication = Globals.sBotDesc;
 
             // Log into universe
-            Stat(1, "Log In", "Entering universe", "color");
+            Stat(1, "Universe Login", "Entering universe.", "black");
             var rc = _instance.Login();
             if (rc != Result.Success)
             {
-                Stat(1, "Log In", "Failed to log in to universe (reason:" + rc + ").", "color");
+                Stat(1, "Error", "Failed to log in to universe (reason:" + rc + ").", "red");
                 return;
             }
             else
             {
-                Stat(1, "Log In", "Universe entry successfull", "color");
+                Stat(1, "Universe Login", "Universe entry successful.", "black");
                 Globals.iInUniv = true;
                 butLoginWorld.Enabled = true;
                 butLogOut.Enabled = true;
@@ -142,18 +148,18 @@ namespace ActiveSim
 
         private void butLoginWorld_Click(object sender, EventArgs e)
         {
-            
+
             // Check universe login state and abort if we're not already logged in
             if (Globals.iInUniv == false)
             {
-                Stat(1, "Error", "Not logged into universe! Aborting.", "color");
+                Stat(1, "Error", "Not logged into universe! Aborting.", "red");
                 return;
             }
 
             // Check world login state and abort if we're already logged in
             if (Globals.iInWorld == true)
             {
-                Stat(1, "Error", "Already logged into world! Aborting.", "color");
+                Stat(1, "Error", "Already logged into world! Aborting.", "red");
                 return;
             }
 
@@ -162,21 +168,21 @@ namespace ActiveSim
             butLogOut.Enabled = false;
 
             // Enter world
-            Stat(1, "World Login", "Logging into world " + Globals.sWorld + ".", "color");
+            Stat(1, "World Login", "Logging into world " + Globals.sWorld + ".", "black");
             var rc = _instance.Enter(Globals.sWorld);
             if (rc != Result.Success)
             {
-                Stat(1, "Error", "Failed to log into world" + Globals.sWorld + " (reason:" + rc + ").", "color");
+                Stat(1, "Error", "Failed to log into world" + Globals.sWorld + " (reason:" + rc + ").", "red");
                 return;
             }
             else
             {
-                Stat(1, "World Login", "World entry successful.", "color");
+                Stat(1, "World Login", "World entry successful.", "black");
                 Globals.iInWorld = true;
             }
 
             // Commit the positioning and become visible
-            Stat(1, "World Pos", "Changing position in world.", "color");
+            Stat(1, "World Pos", "Changing position in world.", "black");
             _instance.Attributes.MyX = Globals.iXPos;
             _instance.Attributes.MyY = Globals.iYPos;
             _instance.Attributes.MyZ = Globals.iZPos;
@@ -186,11 +192,11 @@ namespace ActiveSim
             rc = _instance.StateChange();
             if (rc == Result.Success)
             {
-                Stat(1, "World Pos", "Movement successful.", "color");
+                Stat(1, "World Pos", "Movement successful.", "black");
             }
             else
             {
-                Stat(1, "World Pos", "Movement aborted (reason: " + rc + ").", "color");
+                Stat(1, "World Pos", "Movement aborted (reason: " + rc + ").", "red");
             }
 
             // Enable all the appropriate buttons
@@ -208,13 +214,13 @@ namespace ActiveSim
             // Check for login state
             if (Globals.iInUniv == false)
             {
-                Stat(1, "Error", "Not in universe. Aborted.", "color");
+                Stat(1, "Error", "Not in universe. Aborted.", "red");
                 return;
             }
 
             // Dispose of the API instance, reset all flags
             _instance.Dispose();
-            Stat(1, "Logout", "Logged out.", "color");
+            Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.iInWorld = false;
 
@@ -247,20 +253,32 @@ namespace ActiveSim
                 return;
             }
             _instance.Dispose();
-            Stat(1, "Logout", "Logged out.", "color");
+            Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
         }
 
-      
+
 
         private void Chat(int icon, string speaker, string message, string color)
         {
             DateTime now = DateTime.Now;
-            string dt = String.Format("{0:d/M/yyyy - HH:mm:ss}", now);
+            string dt = String.Format("{0:M/d/yyyy - HH:mm:ss}", now);
             ListViewItem temp = new ListViewItem(dt, 0);
+            temp.UseItemStyleForSubItems = false;
             temp.SubItems.Add(speaker);
             temp.SubItems.Add(message);
-            //temp.SubItems.Add("Hello, cruel world!", System.Drawing.Color.Red, System.Drawing.Color.Black);  //fucked
+            if (color == "blue")
+            {
+                temp.SubItems[2].Font = new System.Drawing.Font(ChatMon.Font, System.Drawing.FontStyle.Italic);
+                temp.SubItems[2].ForeColor = System.Drawing.Color.FromName(color);
+            }
+            else
+            {
+                temp.SubItems[2].Font = new System.Drawing.Font(ChatMon.Font, System.Drawing.FontStyle.Regular);
+                temp.SubItems[2].ForeColor = System.Drawing.Color.FromName("black");
+            }
+
+
             ChatMon.Items.Add(temp);
             ChatMon.EnsureVisible(ChatMon.Items.Count - 1);
         }
@@ -268,19 +286,45 @@ namespace ActiveSim
         private void Stat(int icon, string action, string message, string color)
         {
             DateTime now = DateTime.Now;
-            string dt = String.Format("{0:d/M/yyyy - HH:mm:ss}", now);
-            ListViewItem temp = new ListViewItem(dt, 0);
-            temp.SubItems.Add(action);
-            temp.SubItems.Add(message);
-            //temp.SubItems.Add("Hello, cruel world!", System.Drawing.Color.Red, System.Drawing.Color.Black);  //fucked
-            StatMon.Items.Add(temp);
+            string dt = String.Format("{0:M/d/yyyy - HH:mm:ss}", now);
+            ListViewItem item = new ListViewItem(dt, 0);
+            item.UseItemStyleForSubItems = false;
+            item.SubItems.Add(action);
+            item.SubItems.Add(message);
+
+            item.SubItems[1].Font = new System.Drawing.Font(ChatMon.Font, System.Drawing.FontStyle.Bold);
+            item.SubItems[1].ForeColor = System.Drawing.Color.FromName(color);
+            item.SubItems[2].ForeColor = System.Drawing.Color.FromName(color);
+            StatMon.Items.Add(item);
             StatMon.EnsureVisible(StatMon.Items.Count - 1);
 
         }
 
         private void OnEventChat(IInstance sender)
         {
-            Chat(1, sender.Attributes.AvatarName, sender.Attributes.ChatMessage, "color");
+            if (sender.Attributes.ChatType == ChatTypes.Whisper)
+            {
+                Chat(1, sender.Attributes.AvatarName, "(whispered): " + sender.Attributes.ChatMessage, "blue");
+            }
+            else
+            {
+                Chat(1, sender.Attributes.AvatarName, sender.Attributes.ChatMessage, "black");
+            }
+
+            // need code to see if the simulation is started - if it isn't, we don't do anything else with the chat
+            // if it is, send that to the parser with session ID, speaker, message, chattype, etc.
+            int iType;
+            if (sender.Attributes.ChatType == ChatTypes.Whisper)
+            {
+                iType = 2;
+            }
+            else
+            {
+                iType = 1;
+            }
+            
+            Commands(sender.Attributes.AvatarName, iType, sender.Attributes.ChatSession, sender.Attributes.ChatMessage);
+
         }
 
         private void butSendChat_Click(object sender, EventArgs e)
@@ -288,8 +332,8 @@ namespace ActiveSim
             // Read the input box
             string send = txtSendChat.Text;
             _instance.Say(send);
-            Stat(1, "Chat", "Sent chat text to chat window", "color");
-            Chat(1, _instance.Attributes.LoginName, send, "color");
+            Stat(1, "Chat", "Sent chat text to chat window", "black");
+            Chat(1, _instance.Attributes.LoginName, send, "black");
         }
     }
 }

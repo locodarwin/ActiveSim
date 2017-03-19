@@ -129,7 +129,7 @@
             // 
             // ChatMon
             // 
-            this.ChatMon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ChatMon.BackColor = System.Drawing.Color.PowderBlue;
             this.ChatMon.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ChatMon.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.ChatMon.Location = new System.Drawing.Point(12, 21);
