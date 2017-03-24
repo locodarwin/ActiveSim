@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.SQLite;
 
 namespace ActiveSim
 {
@@ -79,15 +75,22 @@ namespace ActiveSim
             // if not, add to database and assign defaults to each parameter
 
             // Get the default login table from the database
-            string sql = "select * from LoginProfiles where ProfileName = 'Default'";
-            SQLiteCommand cmd = new SQLiteCommand(sql, Form1.Globals.m_db);
-            SQLiteDataReader reader = cmd.ExecuteReader();
+            // Gotta figure out how to best wrap this up in a class or method group
+            string sql = "select * from LoginProfiles where Citnum = '" + iCitnum.ToString() + "'";
+            SQLiteCommand sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            SQLiteDataReader reader = sqlcmd.ExecuteReader();
             
-            // Read login data from database and save into global login variables
-            while(reader.Read())
-            
+            // Do we have any entries for this citnum?
+            if (reader.HasRows == true)
+            {
+                // We've got rows returned! Respond back with this fact and don't add anything.
 
-            Response(iSess, iType, "You asked to register.");
+                return;
+            }
+            
+            // Add the person's registration to database, use default values in the context of the current Profile (important! Could have many profiles)
+
+            Response(iSess, iType, "What so say after successful registration.");
 
         }
 
