@@ -11,3 +11,10 @@ C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Rel
 C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.pdb
 C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.csprojResolveAssemblyReference.cache
 C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.Form2.resources
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.csprojResolveAssemblyReference.cache
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.Form1.resources
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.Form2.resources
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.Properties.Resources.resources
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.csproj.GenerateResource.Cache
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.exe
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.pdb

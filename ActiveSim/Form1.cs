@@ -313,6 +313,10 @@ namespace ActiveSim
 
             // need code to see if the simulation is started - if it isn't, we don't do anything else with the chat
             // if it is, send that to the parser with session ID, speaker, message, chattype, etc.
+            
+
+
+            // If command is whispered rather than stated aloud in chat
             int iType;
             if (sender.Attributes.ChatType == ChatTypes.Whisper)
             {

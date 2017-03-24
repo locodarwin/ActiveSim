@@ -74,6 +74,19 @@ namespace ActiveSim
             int iCitnum = GetCitnum(sName);
             Stat(1, "CMD", "Command: register (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
 
+            // check database for existing
+
+            // if not, add to database and assign defaults to each parameter
+
+            // Get the default login table from the database
+            string sql = "select * from LoginProfiles where ProfileName = 'Default'";
+            SQLiteCommand cmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            
+            // Read login data from database and save into global login variables
+            while(reader.Read())
+            
+
             Response(iSess, iType, "You asked to register.");
 
         }
