@@ -18,3 +18,8 @@ C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Rel
 C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.csproj.GenerateResource.Cache
 C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.exe
 C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.pdb
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\aw.dll
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\activesim.db
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.exe.config
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.exe
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.pdb

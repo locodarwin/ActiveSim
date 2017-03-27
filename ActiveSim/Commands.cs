@@ -1,4 +1,5 @@
 ﻿using System.Data.SQLite;
+using System.Data;
 
 namespace ActiveSim
 {
@@ -27,6 +28,13 @@ namespace ActiveSim
                 case "register":
                     DoRegister(sName, iType, iSession, cmd);
                     break;
+                case "de-register":
+                    DoDeRegister(sName, iType, iSession, cmd);
+                    break;
+                case "hud":
+                    DoHUD(sName, iType, iSession, cmd);
+                    break;
+
             }
             //Stat(1, "Test", cmd, "black");
         }
@@ -76,24 +84,112 @@ namespace ActiveSim
 
             // Get the default login table from the database
             // Gotta figure out how to best wrap this up in a class or method group
-            string sql = "select * from LoginProfiles where Citnum = '" + iCitnum.ToString() + "'";
+            string sql = "select * from UserSheet where Citnum = '" + iCitnum.ToString() + "' and SimProfile = '" + Globals.sSimProfile + "'";
             SQLiteCommand sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             SQLiteDataReader reader = sqlcmd.ExecuteReader();
-            
+
             // Do we have any entries for this citnum?
             if (reader.HasRows == true)
             {
                 // We've got rows returned! Respond back with this fact and don't add anything.
-
+                Response(iSess, iType, "Citnum " + iCitnum + " is already registered for this Sim; no action taken.");
                 return;
             }
-            
-            // Add the person's registration to database, use default values in the context of the current Profile (important! Could have many profiles)
+            reader.Close();
 
-            Response(iSess, iType, "What so say after successful registration.");
+            // Add the person's registration to database, use default values in the context of the current Profile (important! Could have many profiles)
+            sql = "INSERT INTO UserSheet VALUES ('" + Globals.sSimProfile + "', '" + iCitnum.ToString() + "', '" + Globals.iCurrency.ToString() + "', '" + Globals.iCarryCap.ToString() + "')";
+            sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            sqlcmd.ExecuteNonQuery();
+            
+            Response(iSess, iType, "Registration successful.");
+            Response(iSess, iType, "Stats for citnum " + iCitnum.ToString() + ":");
+            Response(iSess, iType, Globals.sCurrencyName + "s: " + Globals.iCurrency.ToString());
+            Response(iSess, iType, Globals.sCarryName + "s of carrying capacity: " + Globals.iCarryCap.ToString());
 
         }
 
+        private void DoDeRegister(string sName, int iType, int iSess, string[] cmd)
+        {
 
+            // TODO - need a way for captains to do this on behalf of users
+
+            int iCitnum = GetCitnum(sName);
+            Stat(1, "CMD", "Command: de-register (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
+
+            string sql = "select * from UserSheet where Citnum = '" + iCitnum.ToString() + "' and SimProfile = '" + Globals.sSimProfile + "'";
+            SQLiteCommand sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            SQLiteDataReader reader = sqlcmd.ExecuteReader();
+
+            // Do we have any entries for this citnum?
+            if (reader.HasRows == false)
+            {
+                // We've got rows returned! Respond back with this fact and don't add anything.
+                Response(iSess, iType, "Citnum " + iCitnum + " is not registered for this Sim; no action taken.");
+                return;
+            }
+            reader.Close();
+
+            // Remove the person's registration from database
+            sql = "DELETE FROM UserSheet WHERE SimProfile = '" + Globals.sSimProfile + "' AND Citnum = '" + iCitnum.ToString() + "'";
+            sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            sqlcmd.ExecuteNonQuery();
+
+            Response(iSess, iType, "De-registration successful. Citnum " + iCitnum.ToString() + " was removed from the Sim database.");
+
+        }
+
+        private void DoHUD(string sName, int iType, int iSession, string[] cmd)
+        {
+            int iCitnum = GetCitnum(sName);
+            Stat(1, "CMD", "Command: HUD (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
+
+            if (cmd[1] == "start")
+            {
+
+                _instance.Attributes.HudElementType = AW.HudType.Image;
+                _instance.Attributes.HudElementText = "https://s1-ssl.dmcdn.net/TLTGc/200x200-7Am.jpg";
+                _instance.Attributes.HudElementId = 1;
+                _instance.Attributes.HudElementSession = iSession;
+                _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+                _instance.Attributes.HudElementOpacity = 0.5f;
+                _instance.Attributes.HudElementX = 0;
+                _instance.Attributes.HudElementY = 0;
+                _instance.Attributes.HudElementZ = 2;
+                _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+                _instance.Attributes.HudElementColor = 0xDDFF00;
+                _instance.Attributes.HudElementSizeX = 200;
+                _instance.Attributes.HudElementSizeY = 200;
+
+                _instance.HudCreate();
+
+
+                _instance.Attributes.HudElementType = AW.HudType.Text;
+                _instance.Attributes.HudElementText = "Test Text";
+                _instance.Attributes.HudElementId = 2;
+                _instance.Attributes.HudElementSession = iSession;
+                _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+                _instance.Attributes.HudElementOpacity = 1.0f;
+                _instance.Attributes.HudElementX = 0;
+                _instance.Attributes.HudElementY = 0;
+                _instance.Attributes.HudElementZ = 1;
+                _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+                _instance.Attributes.HudElementColor = 0x000000;
+                _instance.Attributes.HudElementSizeX = 100;
+                _instance.Attributes.HudElementSizeY = 100;
+
+                _instance.HudCreate();
+
+
+            }
+
+            if (cmd[1] == "stop")
+            {
+                _instance.HudDestroy(iSession, 1);
+                _instance.HudDestroy(iSession, 2);
+            }
+
+
+        }
     }
 }

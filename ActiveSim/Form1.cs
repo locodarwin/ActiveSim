@@ -52,7 +52,7 @@ namespace ActiveSim
         {
             public static string sAppName = "ActiveSim";
             public static string sVersion = "v1.0";
-            public static string sByline = "Copyright 2017 by Locodarwin";
+            public static string sByline = "Copyright © 2017 by Locodarwin";
 
             public static string sUnivLogin = "auth.activeworlds.com";
             public static int iPort = 6670;
@@ -69,6 +69,13 @@ namespace ActiveSim
 
             public static bool iInUniv = false;
             public static bool iInWorld = false;
+            public static bool iSimRun = false;
+
+            public static string sSimProfile = "Default";
+            public static string sCurrencyName = "gold";
+            public static int iCurrency = 0;
+            public static string sCarryName = "pound";
+            public static int iCarryCap = 0;
 
             public static SQLiteConnection m_db;
 
@@ -223,6 +230,7 @@ namespace ActiveSim
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.iInWorld = false;
+            Globals.iSimRun = false;
 
             // Disable all buttons except universe login
             butLoginUniv.Enabled = true;
@@ -234,6 +242,39 @@ namespace ActiveSim
             butSimStart.Enabled = false;
             butSimStatus.Enabled = false;
             butSimStop.Enabled = false;
+        }
+
+        private void butSendChat_Click(object sender, EventArgs e)
+        {
+            // Read the input box
+            string send = txtSendChat.Text;
+            _instance.Say(send);
+            Stat(1, "Chat", "Sent chat text to chat window", "black");
+            Chat(1, _instance.Attributes.LoginName, send, "black");
+        }
+
+        private void butSimStart_Click(object sender, EventArgs e)
+        {
+            // Disabled the buttons for this and sim config, enable the button for "stop sim"
+            butSimStart.Enabled = false;
+            butSimConfig.Enabled = false;
+            butSimStop.Enabled = true;
+
+
+            Stat(1, "Sim Start", "Started Active Simulator profile '" + Globals.sSimProfile + "'", "black");
+            SimDataLoad();
+            Globals.iSimRun = true;
+        }
+
+        private void butSimStop_Click(object sender, EventArgs e)
+        {
+            // Disabled the buttons for this and enable sim config & start sim
+            butSimStart.Enabled = true;
+            butSimConfig.Enabled = true;
+            butSimStop.Enabled = false;
+
+            Stat(1, "Sim Start", "Stopped Active Simulator profile '" + Globals.sSimProfile + "'", "black");
+            Globals.iSimRun = false;
         }
 
         // timer function for the AW Wait function
@@ -248,13 +289,10 @@ namespace ActiveSim
         // Form1 is closing; let's do a clean log out of the universe first
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (Globals.iInUniv == false)
-            {
-                return;
-            }
             _instance.Dispose();
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
+            Globals.m_db.Close();
         }
 
 
@@ -302,6 +340,8 @@ namespace ActiveSim
 
         private void OnEventChat(IInstance sender)
         {
+            
+            // Echo the chat (or whisper) to the chat window
             if (sender.Attributes.ChatType == ChatTypes.Whisper)
             {
                 Chat(1, sender.Attributes.AvatarName, "(whispered): " + sender.Attributes.ChatMessage, "blue");
@@ -311,11 +351,13 @@ namespace ActiveSim
                 Chat(1, sender.Attributes.AvatarName, sender.Attributes.ChatMessage, "black");
             }
 
-            // need code to see if the simulation is started - if it isn't, we don't do anything else with the chat
-            // if it is, send that to the parser with session ID, speaker, message, chattype, etc.
+            // If the simulation is not started, go no further
+            if (Globals.iSimRun == false)
+            {
+                return;
+            }
+
             
-
-
             // If command is whispered rather than stated aloud in chat
             int iType;
             if (sender.Attributes.ChatType == ChatTypes.Whisper)
@@ -326,18 +368,12 @@ namespace ActiveSim
             {
                 iType = 1;
             }
-            
+
+            // Send the chat to the parser with session ID, speaker, message, chattype, etc.
             Commands(sender.Attributes.AvatarName, iType, sender.Attributes.ChatSession, sender.Attributes.ChatMessage);
 
         }
 
-        private void butSendChat_Click(object sender, EventArgs e)
-        {
-            // Read the input box
-            string send = txtSendChat.Text;
-            _instance.Say(send);
-            Stat(1, "Chat", "Sent chat text to chat window", "black");
-            Chat(1, _instance.Attributes.LoginName, send, "black");
-        }
+
     }
 }

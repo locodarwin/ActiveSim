@@ -60,6 +60,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>activesimDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Database.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Commands.cs">
       <SubType>Form</SubType>
     </Compile>

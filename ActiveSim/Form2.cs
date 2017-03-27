@@ -34,6 +34,7 @@ namespace ActiveSim
                 Form1.Globals.iYaw = Convert.ToInt32(reader["LoginYaw"]);
 
             }
+            reader.Close();
 
             // Populate form textboxes with login data pulled from database
             txtHost.Text = Form1.Globals.sUnivLogin;

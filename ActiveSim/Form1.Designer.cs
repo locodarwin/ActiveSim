@@ -177,6 +177,7 @@
             this.butSimStop.TabIndex = 1;
             this.butSimStop.Text = "Stop The Simulator";
             this.butSimStop.UseVisualStyleBackColor = true;
+            this.butSimStop.Click += new System.EventHandler(this.butSimStop_Click);
             // 
             // butSimStart
             // 
@@ -186,6 +187,7 @@
             this.butSimStart.TabIndex = 0;
             this.butSimStart.Text = "Start The Simulator";
             this.butSimStart.UseVisualStyleBackColor = true;
+            this.butSimStart.Click += new System.EventHandler(this.butSimStart_Click);
             // 
             // groupBox1
             // 

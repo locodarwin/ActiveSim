@@ -11,3 +11,15 @@ C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Deb
 C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Debug\activesim.db
 C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\bin\Debug\aw.dll
 C:\Users\Shawn\Documents\Visual Studio 2015\Projects\ActiveSim\ActiveSim\obj\Debug\ActiveSim.Form2.resources
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Debug\aw.dll
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Debug\activesim.db
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Debug\ActiveSim.exe.config
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Debug\ActiveSim.exe
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Debug\ActiveSim.pdb
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Debug\ActiveSim.Form1.resources
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Debug\ActiveSim.Form2.resources
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Debug\ActiveSim.Properties.Resources.resources
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Debug\ActiveSim.csproj.GenerateResource.Cache
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Debug\ActiveSim.exe
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Debug\ActiveSim.pdb
+C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Debug\ActiveSim.csprojResolveAssemblyReference.cache
