@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
 using AW;
 using System.Data.SQLite;
+using System.Data;
 
 namespace ActiveSim
 {
@@ -77,6 +79,11 @@ namespace ActiveSim
             public static string sCarryName = "pound";
             public static int iCarryCap = 0;
 
+            // Permissions dictionaries
+            public static Dictionary<string, string> CitnumPermLevel = new Dictionary<string, string>();
+            public static Dictionary<string, string> CMDPermLevel = new Dictionary<string, string>();
+
+            // SQLITE connection
             public static SQLiteConnection m_db;
 
         }
@@ -262,7 +269,12 @@ namespace ActiveSim
 
 
             Stat(1, "Sim Start", "Started Active Simulator profile '" + Globals.sSimProfile + "'", "black");
+
+            // Load Sim Data
             SimDataLoad();
+
+            // Load permissions dictionaries
+            LoadPerms();
             Globals.iSimRun = true;
         }
 
