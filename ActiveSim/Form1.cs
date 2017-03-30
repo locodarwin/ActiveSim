@@ -81,7 +81,7 @@ namespace ActiveSim
 
             // Permissions dictionaries
             public static Dictionary<string, string> CitnumPermLevel = new Dictionary<string, string>();
-            public static Dictionary<string, string> CMDPermLevel = new Dictionary<string, string>();
+            public static DataTable CMDPermLevel = new DataTable();
 
             // SQLITE connection
             public static SQLiteConnection m_db;

@@ -34,12 +34,15 @@ namespace ActiveSim
 
             // Initialize the dictionary, as it may have been used once before
             Globals.CMDPermLevel.Clear();
+            Globals.CMDPermLevel.Columns.Clear();
+            Globals.CMDPermLevel.Columns.Add("PermissionGroup", typeof(string));
+            Globals.CMDPermLevel.Columns.Add("Command", typeof(string));
 
             // Put the collected rows in the dictionary
             foreach (DataRow row in dt.Rows)
             {
                 // Add only the 'PermissionGroup' and 'Command' fields
-                Globals.CMDPermLevel.Add(row.Field<string>(1), row.Field<string>(2));
+                Globals.CMDPermLevel.Rows.Add(row.Field<string>(1), row.Field<string>(2));
             }
 
 
@@ -65,17 +68,24 @@ namespace ActiveSim
                 return false;
             }
 
-            if (Globals.CMDPermLevel.TryGetValue(tempPermGroup, out temp))
+            // test every element in the dictionary for the command/permlevel combo
+            bool GotIt = false;
+            foreach(DataRow row in Globals.CMDPermLevel.Rows)
             {
-                // do stuff here!  Need a foreach to wrap this whole thing, prolly
-
-
-
+                if (row.Field<string>(0) == temp)
+                {
+                    if (row.Field<string>(1) == sCommand)
+                    {
+                        GotIt = true;
+                        Stat(1, "PermCheck", "Perm check passed!", "black");
+                    }
+                }
             }
-
-
-
-            return false;
+            if (GotIt == false)
+            {
+                Stat(1, "PermCheck", "Perm check failed!", "black");
+            }
+            return GotIt;
         }
 
 

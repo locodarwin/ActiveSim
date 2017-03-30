@@ -60,7 +60,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>activesimDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Class1.cs" />
+    <Compile Include="HUDClass.cs" />
     <Compile Include="Database.cs">
       <SubType>Form</SubType>
     </Compile>
