@@ -142,7 +142,7 @@ namespace ActiveSim
             var rc = _instance.Login();
             if (rc != Result.Success)
             {
-                Stat(1, "Error", "Failed to log in to universe (reason:" + rc + ").", "red");
+                Stat(1, "Error", "Failed to log in to universe (reason: " + rc + ").", "red");
                 return;
             }
             else
@@ -186,7 +186,8 @@ namespace ActiveSim
             var rc = _instance.Enter(Globals.sWorld);
             if (rc != Result.Success)
             {
-                Stat(1, "Error", "Failed to log into world" + Globals.sWorld + " (reason:" + rc + ").", "red");
+                Stat(1, "Error", "Failed to log into world " + Globals.sWorld + " (reason:" + rc + ").", "red");
+                butLogOut.Enabled = true;
                 return;
             }
             else
