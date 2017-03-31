@@ -43,8 +43,10 @@ namespace ActiveSim
             {
                 Globals.iCarryCap = Convert.ToInt32(temp);
             }
-            
-
+            if (dict.TryGetValue("Captain", out temp))
+            {
+                Globals.sCaptain = temp;
+            }
 
 
         }

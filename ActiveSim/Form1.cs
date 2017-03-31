@@ -11,7 +11,7 @@ namespace ActiveSim
     {
 
         // Timer identifiers created out here in public
-        public IInstance _instance;
+        public static IInstance _instance;
         public Timer aTimer;
 
         public Form1()
@@ -82,6 +82,9 @@ namespace ActiveSim
             // Permissions dictionaries
             public static Dictionary<string, string> CitnumPermLevel = new Dictionary<string, string>();
             public static DataTable CMDPermLevel = new DataTable();
+
+            // Sim rules
+            public static string sCaptain = "318855";
 
             // SQLITE connection
             public static SQLiteConnection m_db;
@@ -286,7 +289,7 @@ namespace ActiveSim
             butSimConfig.Enabled = true;
             butSimStop.Enabled = false;
 
-            Stat(1, "Sim Start", "Stopped Active Simulator profile '" + Globals.sSimProfile + "'", "black");
+            Stat(1, "Sim Stop", "Stopped Active Simulator profile '" + Globals.sSimProfile + "'", "black");
             Globals.iSimRun = false;
         }
 
@@ -364,10 +367,14 @@ namespace ActiveSim
                 Chat(1, sender.Attributes.AvatarName, sender.Attributes.ChatMessage, "black");
             }
 
-            // If the simulation is not started, go no further
+            // If the simulation is not started, go no further, unless it's the SIM command
             if (Globals.iSimRun == false)
             {
-                return;
+                string testcmd = sender.Attributes.ChatMessage.Substring(0, 4);
+                if (testcmd != "/sim")
+                {
+                    return;
+                }             
             }
 
             

@@ -52,11 +52,21 @@ namespace ActiveSim
 
         private bool CheckPerms(int iCitnum, string sCommand)
         {
+
+            bool GotIt = false;
+
+            // If it's the capain, automatically return true
+            if (iCitnum.ToString() == Globals.sCaptain)
+            {
+                Stat(1, "PermCheck", "Permission check automatic pass - Captain issued", "black");
+                return true;
+            }
+
             // Get all rows of the SimRules table that match the current SimProfile and put in a datatable
             string temp;
             string tempPermGroup;
 
-            Stat(1, "PermCheck", "Checking permissions for Citnum" + iCitnum.ToString(), "black");
+            Stat(1, "PermCheck", "Checking permissions for Citnum " + iCitnum.ToString(), "black");
 
             if (Globals.CitnumPermLevel.TryGetValue(iCitnum.ToString(), out temp))
             {
@@ -64,12 +74,12 @@ namespace ActiveSim
             }
             else
             {
-                Stat(1, "PermCheck", "Perm check failed!", "black");
+                Stat(1, "PermCheck", "Permission check failed!", "black");
                 return false;
             }
 
             // test every element in the dictionary for the command/permlevel combo
-            bool GotIt = false;
+            
             foreach(DataRow row in Globals.CMDPermLevel.Rows)
             {
                 if (row.Field<string>(0) == temp)
@@ -77,13 +87,13 @@ namespace ActiveSim
                     if (row.Field<string>(1) == sCommand)
                     {
                         GotIt = true;
-                        Stat(1, "PermCheck", "Perm check passed!", "black");
+                        Stat(1, "PermCheck", "Permission check passed!", "black");
                     }
                 }
             }
             if (GotIt == false)
             {
-                Stat(1, "PermCheck", "Perm check failed!", "black");
+                Stat(1, "PermCheck", "Permission check failed!", "black");
             }
             return GotIt;
         }
