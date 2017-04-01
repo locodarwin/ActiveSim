@@ -79,6 +79,10 @@ namespace ActiveSim
             public static string sCarryName = "pound";
             public static int iCarryCap = 0;
 
+            // World user list
+            public static List<string> CitList = new List<string>();
+            public static List<string> SimplayerList = new List<string>();
+
             // Permissions dictionaries
             public static Dictionary<string, string> CitnumPermLevel = new Dictionary<string, string>();
             public static DataTable CMDPermLevel = new DataTable();
@@ -131,8 +135,10 @@ namespace ActiveSim
 
             // Install events & callbacks
             Stat(1, "API Init", "Installing events and callbacks.", "black");
-            //_instance.EventAvatarAdd += OnEventAvatarAdd;
+            _instance.EventAvatarAdd += OnEventAvatarAdd;
+            _instance.EventAvatarDelete += OnEventAvatarDelete;
             _instance.EventChat += OnEventChat;
+            _instance.EventHudClick += OnEventHUDClick;
 
             // Set universe login parameters
             _instance.Attributes.LoginName = Globals.sBotName;
@@ -187,6 +193,7 @@ namespace ActiveSim
             // Enter world
             Stat(1, "World Login", "Logging into world " + Globals.sWorld + ".", "black");
             var rc = _instance.Enter(Globals.sWorld);
+            //_instance.Attributes.ServerCaretakers = _instance.Attributes.LoginName.ToString();
             if (rc != Result.Success)
             {
                 Stat(1, "Error", "Failed to log into world " + Globals.sWorld + " (reason:" + rc + ").", "red");
@@ -394,6 +401,108 @@ namespace ActiveSim
 
         }
 
+        private void OnEventAvatarAdd(IInstance sender)
+        {
+
+            string temp = sender.Attributes.AvatarName;
+            string temp2 = sender.Attributes.AvatarCitizen.ToString();
+
+            // If the entity is already in the simplayer list, remove
+            var value = Globals.SimplayerList.Find(item => item.Equals(temp));
+            if (value != null)
+            {
+                Globals.SimplayerList.Remove(temp);
+            }
+
+            // if the entity is in the CitList, remove
+            value = Globals.CitList.Find(item => item.Equals(temp));
+            if (value != null)
+            {
+                Globals.CitList.Remove(temp);
+            }
+
+            // check to see if it's a bot
+            if (sender.Attributes.AvatarCitizen == 0)
+            {
+                // Avatar is a bot or tourist; show in status log but do nothing else
+                Stat(1, "Bot Add", "Bot " + temp + " has joined the world.", "blue");
+                return;
+            }
+            
+                
+
+            // if Simplayer, add to Simplayer list
+            if (CheckRegistered(temp) == true)
+            {
+                Globals.SimplayerList.Add(temp);
+                Stat(1, "Simplayer Enters", "Registered Simplayer " + temp + " has joined the world.", "blue");
+                DrawHUD(sender.Attributes.AvatarSession);
+            }
+            else
+            {
+                Stat(1, "Citizen Enters", "Non-Simplayer " + temp + " has joined the world.", "blue");
+            }
+
+            // Always add to CitList
+            Globals.CitList.Add(temp);
+
+            // If Captain, announce entry
+            if (temp2 == Globals.sCaptain)
+            {
+                Stat(1, Globals.sBotName, "Captain " + temp + " on deck.", "black");
+                Chat(1, Globals.sBotName, "Captain " + temp + " on deck.", "black");
+                _instance.Say("Captain " + temp + " on deck.");
+            }
+                
+            
+            
+            
+            
+            // Do all the HUD adding and such
+            
+            //Globals.UserList.Add(sender.Attributes.AvatarName);
+            
+
+        }
+
+        private void OnEventAvatarDelete(IInstance sender)
+        {
+            // Remove the leaving citizen from both lists
+            string temp = sender.Attributes.AvatarName;
+            var value = Globals.SimplayerList.Find(item => item.Equals(temp));
+            if (value != null)
+            {
+                Globals.SimplayerList.Remove(temp);
+            }
+            value = Globals.CitList.Find(item => item.Equals(temp));
+            if (value != null)
+            {
+                Globals.CitList.Remove(temp);
+            }
+
+
+            // If Captain, announce leaving
+            string temp2 = sender.Attributes.AvatarCitizen.ToString();
+            if (temp2 == Globals.sCaptain)
+            {
+                Stat(1, Globals.sBotName, "Captain " + temp + " has left the deck.", "black");
+                Chat(1, Globals.sBotName, "Captain " + temp + " has left the deck.", "black");
+                _instance.Say("Captain " + temp + " has left the deck.");
+            }
+
+        }
+
+        private void OnEventHUDClick(IInstance sender)
+        {
+            var id = sender.Attributes.HudElementId;
+            var x = sender.Attributes.HudElementClickX;
+            var y = sender.Attributes.HudElementClickY;
+            var z = sender.Attributes.HudElementClickZ;
+
+            Stat(1, "HUD Click", "Simplayer " + sender.Attributes.AvatarName + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+            Chat(1, "HUD Click", "Simplayer " + sender.Attributes.AvatarName + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+            _instance.Say("Simplayer " + sender.Attributes.AvatarName + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".");
+        }
 
     }
 }

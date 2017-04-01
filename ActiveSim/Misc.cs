@@ -98,6 +98,130 @@ namespace ActiveSim
             return GotIt;
         }
 
+        private bool CheckRegistered(string sName)
+        {
+            int iCitnum = GetCitnum(sName);
+            bool bStat;
+
+            string sql = "select * from UserSheet where Citnum = '" + iCitnum.ToString() + "' and SimProfile = '" + Globals.sSimProfile + "'";
+            SQLiteCommand sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            SQLiteDataReader reader = sqlcmd.ExecuteReader();
+
+            // Do we have any entries for this citnum?
+            if (reader.HasRows == true)
+            {
+                // We've got rows returned! The user is registered; return true
+                bStat = true;
+            }
+            else
+            {
+                bStat = false;
+            }
+            reader.Close();
+            return bStat;
+        }
+
+        private void ConsolePrint(int iSess, int color, bool bold, bool italics, string msg)
+        {
+            _instance.Attributes.ConsoleColor = color;
+            _instance.Attributes.ConsoleBold = bold;
+            _instance.Attributes.ConsoleItalics = italics;
+            _instance.Attributes.ConsoleMessage = "        " + msg;
+            var rc = _instance.ConsoleMessage(iSess);
+            if (rc != AW.Result.Success)
+            {
+                Console.WriteLine(rc);
+            }
+
+        }
+
+        private void DrawHUD(int iSess)
+        {
+            
+            _instance.Attributes.HudElementType = AW.HudType.Image;
+            _instance.Attributes.HudElementText = "/hud/attack-yes.jpg";
+            _instance.Attributes.HudElementId = 1;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 0;
+            _instance.Attributes.HudElementY = 0;
+            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 64;
+            _instance.Attributes.HudElementSizeY = 64;
+
+            _instance.HudCreate();
+
+            _instance.Attributes.HudElementType = AW.HudType.Image;
+            _instance.Attributes.HudElementText = "/hud/trade-yes.jpg";
+            _instance.Attributes.HudElementId = 2;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 64;
+            _instance.Attributes.HudElementY = 0;
+            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 64;
+            _instance.Attributes.HudElementSizeY = 64;
+
+            _instance.HudCreate();
+
+
+            _instance.Attributes.HudElementType = AW.HudType.Image;
+            _instance.Attributes.HudElementText = "/hud/ntdibut.jpg";
+            _instance.Attributes.HudElementId = 3;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 0;
+            _instance.Attributes.HudElementY = 64;
+            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 128;
+            _instance.Attributes.HudElementSizeY = 32;
+
+            _instance.HudCreate();
+
+            _instance.Attributes.HudElementType = AW.HudType.Image;
+            _instance.Attributes.HudElementText = "/hud/ntdibut.jpg";
+            _instance.Attributes.HudElementId = 4;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 0;
+            _instance.Attributes.HudElementY = 96;
+            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 128;
+            _instance.Attributes.HudElementSizeY = 32;
+
+            _instance.HudCreate();
+
+            _instance.Attributes.HudElementType = AW.HudType.Image;
+            _instance.Attributes.HudElementText = "/hud/ntdibut.jpg";
+            _instance.Attributes.HudElementId = 5;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 0;
+            _instance.Attributes.HudElementY = 128;
+            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 128;
+            _instance.Attributes.HudElementSizeY = 32;
+
+            _instance.HudCreate();
+
+        }
+
+
 
     }
 }

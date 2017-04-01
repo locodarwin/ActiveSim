@@ -39,6 +39,12 @@ namespace ActiveSim
                 case "sim":
                     DoSim(sName, iType, iSession, cmd);
                     break;
+                case "present":
+                    DoPresent(sName, iType, iSession, cmd);
+                    break;
+                case "console":
+                    DoConsole(sName, iType, iSession, cmd);
+                    break;
 
             }
             //Stat(1, "Test", cmd, "black");
@@ -118,7 +124,7 @@ namespace ActiveSim
                 }
                 else
                 {
-                    Response(iSess, iType, "Sorry, you do not have permission to register another user.");
+                    Response(iSess, iType, "Sorry, you do not have permission to register another citizen.");
                     return;
                 }
             }
@@ -144,7 +150,7 @@ namespace ActiveSim
             sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             sqlcmd.ExecuteNonQuery();
 
-            // Add user to the CitnumPermissionLevel table
+            // Add registered simplayer to the CitnumPermissionLevel table
             string level;
             if (iCitnum.ToString() == Globals.sCaptain)
             {
@@ -152,40 +158,48 @@ namespace ActiveSim
             }
             else
             {
-                level = "User";
+                level = "Simplayer";
             }
             sql = "INSERT INTO CitnumPermissionLevel VALUES ('" + Globals.sSimProfile + "', '" + iCitnum.ToString() + "', '" + level + "')";
             sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             sqlcmd.ExecuteNonQuery();
 
-            // When we add a user to the CitnumPermissionLevel table, we need to reload the permissions tables to make sure they're current
+            // When we add a Simplayer to the CitnumPermissionLevel table, we need to reload the permissions tables to make sure they're current
             Stat(1, "Permissions", "Reloading permissions tables", "black");
             LoadPerms();
 
+            // We also need to add the citizen to the list of simplayers, checking first to see if he/she is already there
+            var value = Globals.SimplayerList.Find(item => item.Equals(sName));
+            if (value == null)
+            {
+                Globals.SimplayerList.Add(sName);
+            }
+
             // Send stats to chat
-            Response(iSess, iType, "Registration successful.");
-            Response(iSess, iType, "Stats for citnum " + iCitnum.ToString() + ":");
-            Response(iSess, iType, Globals.sCurrencyName + "s: " + Globals.iCurrency.ToString());
-            Response(iSess, iType, Globals.sCarryName + "s of carrying capacity: " + Globals.iCarryCap.ToString());
-            Response(iSess, iType, "User's permission level: " + level);
+            ConsolePrint(iSess, 0x000000, true, false, "Registration:\tRegistration successful. Stats for citnum " + iCitnum.ToString() + ":");
+            ConsolePrint(iSess, 0x000000, true, false, "Registration:\t[Currency: " + Globals.iCurrency.ToString() + " " + Globals.sCurrencyName + "s] [" + Globals.sCarryName + "s of carrying capacity: " + Globals.iCarryCap.ToString() + "]");
+            ConsolePrint(iSess, 0x000000, true, false, "Registration:\t[Permission level: " + level + "]");
+            //Response(iSess, iType, "Registration successful. Stats for citnum " + iCitnum.ToString() + ":");
+            //Response(iSess, iType, "[Currency: " + Globals.iCurrency.ToString() + " " + Globals.sCurrencyName + "s] [" + Globals.sCarryName + "s of carrying capacity: " + Globals.iCarryCap.ToString() + "]");
+            //Response(iSess, iType, "[Permission level: " + level + "]");
 
-
-
-
+            // Diaply HUD
+            DrawHUD(iSess);
+            
 
         }
 
         private void DoDeRegister(string sName, int iType, int iSess, string[] cmd)
         {
 
-            // TODO - need a way for captains to do this on behalf of users
+            // TODO - need a way for captains to do this on behalf of citizens
 
             int iCitnum = GetCitnum(sName);
             Stat(1, "CMD", "Command: de-register (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
 
-            // this is where the code would go to have Captains do this on behalf of users. First have to check if it was the captain who
+            // this is where the code would go to have Captains do this on behalf of citizenss. First have to check if it was the captain who
             // called the command. Then read the second parameter of the command for the citnum
-            // and add the user as a Usr
+            // and add the citizen as a Simplayer
             // Turn cmd into a list
             List<string> lCmd = new List<string>();
             foreach (string d in cmd)
@@ -214,7 +228,7 @@ namespace ActiveSim
                 }
                 else
                 {
-                    Response(iSess, iType, "Sorry, you do not have permission to de-register another user.");
+                    Response(iSess, iType, "Sorry, you do not have permission to de-register another citizen.");
                     return;
                 }
             }
@@ -242,7 +256,7 @@ namespace ActiveSim
             sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             sqlcmd.ExecuteNonQuery();
 
-            // When we delete a user from the CitnumPermissionLevel table, we need to reload the permissions tables to make sure they're current
+            // When we delete a Simplayer from the CitnumPermissionLevel table, we need to reload the permissions tables to make sure they're current
             Stat(1, "Permissions", "Reloading permissions tables", "black");
             LoadPerms();
 
@@ -266,70 +280,7 @@ namespace ActiveSim
             if (cmd[1] == "start")
             {
 
-                _instance.Attributes.HudElementType = AW.HudType.Image;
-                _instance.Attributes.HudElementText = "/hud/attack-no.jpg";
-                _instance.Attributes.HudElementId = 1;
-                _instance.Attributes.HudElementSession = iSess;
-                _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
-                _instance.Attributes.HudElementOpacity = 1.0f;
-                _instance.Attributes.HudElementX = 0;
-                _instance.Attributes.HudElementY = 0;
-                _instance.Attributes.HudElementZ = 1;
-                _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
-                _instance.Attributes.HudElementColor = 0xFFFFFF;
-                _instance.Attributes.HudElementSizeX = 128;
-                _instance.Attributes.HudElementSizeY = 32;
-
-                _instance.HudCreate();
-
-
-                _instance.Attributes.HudElementType = AW.HudType.Image;
-                _instance.Attributes.HudElementText = "/hud/arm.jpg";
-                _instance.Attributes.HudElementId = 2;
-                _instance.Attributes.HudElementSession = iSess;
-                _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
-                _instance.Attributes.HudElementOpacity = 1.0f;
-                _instance.Attributes.HudElementX = 0;
-                _instance.Attributes.HudElementY = 32;
-                _instance.Attributes.HudElementZ = 1;
-                _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
-                _instance.Attributes.HudElementColor = 0xFFFFFF;
-                _instance.Attributes.HudElementSizeX = 128;
-                _instance.Attributes.HudElementSizeY = 32;
-
-                _instance.HudCreate();
-
-                _instance.Attributes.HudElementType = AW.HudType.Image;
-                _instance.Attributes.HudElementText = "/hud/arm.jpg";
-                _instance.Attributes.HudElementId = 3;
-                _instance.Attributes.HudElementSession = iSess;
-                _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
-                _instance.Attributes.HudElementOpacity = 1.0f;
-                _instance.Attributes.HudElementX = 0;
-                _instance.Attributes.HudElementY = 64;
-                _instance.Attributes.HudElementZ = 1;
-                _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
-                _instance.Attributes.HudElementColor = 0xFFFFFF;
-                _instance.Attributes.HudElementSizeX = 128;
-                _instance.Attributes.HudElementSizeY = 32;
-
-                _instance.HudCreate();
-
-                _instance.Attributes.HudElementType = AW.HudType.Image;
-                _instance.Attributes.HudElementText = "/hud/arm.jpg";
-                _instance.Attributes.HudElementId = 4;
-                _instance.Attributes.HudElementSession = iSess;
-                _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
-                _instance.Attributes.HudElementOpacity = 1.0f;
-                _instance.Attributes.HudElementX = 0;
-                _instance.Attributes.HudElementY = 96;
-                _instance.Attributes.HudElementZ = 1;
-                _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
-                _instance.Attributes.HudElementColor = 0xFFFFFF;
-                _instance.Attributes.HudElementSizeX = 128;
-                _instance.Attributes.HudElementSizeY = 32;
-
-                _instance.HudCreate();
+                DrawHUD(iSess);
             }
 
             if (cmd[1] == "stop")
@@ -338,6 +289,7 @@ namespace ActiveSim
                 _instance.HudDestroy(iSess, 2);
                 _instance.HudDestroy(iSess, 3);
                 _instance.HudDestroy(iSess, 4);
+                _instance.HudDestroy(iSess, 5);
             }
 
 
@@ -348,7 +300,7 @@ namespace ActiveSim
         private void DoSim(string sName, int iType, int iSess, string[] cmd)
         {
             int iCitnum = GetCitnum(sName);
-            Stat(1, "CMD", "Command: version (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
+            Stat(1, "CMD", "Command: sim (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
 
             // Check permissions
             if (CheckPerms(iCitnum, cmd[0]) == false)
@@ -394,8 +346,65 @@ namespace ActiveSim
             
         }
 
+        private void DoPresent(string sName, int iType, int iSess, string[] cmd)
+        {
+            int iCitnum = GetCitnum(sName);
+            Stat(1, "CMD", "Command: present (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
 
+            // Check permissions
+            if (CheckPerms(iCitnum, cmd[0]) == false)
+            {
+                Response(iSess, iType, "Sorry, " + sName + ", but you do not have permission to use the " + cmd[0] + " command.");
+                return;
+            }
 
+            List<string> lCmd = new List<string>();
+            foreach (string d in cmd)
+            {
+                lCmd.Add(d);
+            }
+
+            string q;
+
+            if (lCmd.Count == 2)
+            {
+                if (lCmd[1] == "simplayers")
+                {
+                    q = "Simplayers in world:";
+                    foreach (string d in Globals.SimplayerList)
+                    {
+                        q = q + " " + d;
+                    }
+                    Response(iSess, iType, q);
+                    return;
+                }
+                if (lCmd[1] == "citizens")
+                {
+                    q = "Total citizens in world:";
+                    foreach (string d in Globals.CitList)
+                    {
+                        q = q + " " + d;
+                    }
+                    Response(iSess, iType, q);
+                    return;
+                }
+            }
+            else
+            {
+                q = "Total citizens in world:";
+                foreach (string d in Globals.CitList)
+                {
+                    q = q + " " + d;
+                }
+                Response(iSess, iType, q);
+                return;
+            }
+        }
+
+        private void DoConsole(string sName, int iType, int iSess, string[] cmd)
+        {
+            ConsolePrint(iSess, 0x009999, true, false, "Testing:\tThis is a test message.");
+        }
 
     }
 }
