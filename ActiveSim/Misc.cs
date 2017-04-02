@@ -48,8 +48,7 @@ namespace ActiveSim
 
             return;
         }
-
-
+        
         private bool CheckPerms(int iCitnum, string sCommand)
         {
 
@@ -146,7 +145,7 @@ namespace ActiveSim
             _instance.Attributes.HudElementOpacity = 1.0f;
             _instance.Attributes.HudElementX = 0;
             _instance.Attributes.HudElementY = 0;
-            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementZ = 2;
             _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
             _instance.Attributes.HudElementColor = 0xFFFFFF;
             _instance.Attributes.HudElementSizeX = 64;
@@ -162,7 +161,7 @@ namespace ActiveSim
             _instance.Attributes.HudElementOpacity = 1.0f;
             _instance.Attributes.HudElementX = 64;
             _instance.Attributes.HudElementY = 0;
-            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementZ = 2;
             _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
             _instance.Attributes.HudElementColor = 0xFFFFFF;
             _instance.Attributes.HudElementSizeX = 64;
@@ -179,7 +178,7 @@ namespace ActiveSim
             _instance.Attributes.HudElementOpacity = 1.0f;
             _instance.Attributes.HudElementX = 0;
             _instance.Attributes.HudElementY = 64;
-            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementZ = 2;
             _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
             _instance.Attributes.HudElementColor = 0xFFFFFF;
             _instance.Attributes.HudElementSizeX = 128;
@@ -195,7 +194,7 @@ namespace ActiveSim
             _instance.Attributes.HudElementOpacity = 1.0f;
             _instance.Attributes.HudElementX = 0;
             _instance.Attributes.HudElementY = 96;
-            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementZ = 2;
             _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
             _instance.Attributes.HudElementColor = 0xFFFFFF;
             _instance.Attributes.HudElementSizeX = 128;
@@ -211,7 +210,7 @@ namespace ActiveSim
             _instance.Attributes.HudElementOpacity = 1.0f;
             _instance.Attributes.HudElementX = 0;
             _instance.Attributes.HudElementY = 128;
-            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementZ = 2;
             _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
             _instance.Attributes.HudElementColor = 0xFFFFFF;
             _instance.Attributes.HudElementSizeX = 128;
@@ -221,6 +220,150 @@ namespace ActiveSim
 
         }
 
+        private void EraseHUD(int iSess)
+        {
+            _instance.HudDestroy(iSess, 1);
+            _instance.HudDestroy(iSess, 2);
+            _instance.HudDestroy(iSess, 3);
+            _instance.HudDestroy(iSess, 4);
+            _instance.HudDestroy(iSess, 5);
+        }
+
+        private string CitTableAdd(string Name, int iSess, string Citnum)
+        {
+            string Registered;
+            string PermLevel = "Citizen";
+            
+            // Check to see if the citizen is already registered for the sim, if not, their perm level is "Citizen," which has no permissions
+            if (CheckRegistered(Name) == true)
+            {
+                Registered = "yes";
+            }
+            else
+            {
+                Registered = "no";
+                PermLevel = "Citizen";
+            }
+
+            // If registered, get his/her permission level
+            if (Registered == "yes")
+            {
+                string temp;
+                int iCitnum = GetCitnum(Name);
+                if (Globals.CitnumPermLevel.TryGetValue(iCitnum.ToString(), out temp))
+                {
+                    PermLevel = temp; // Found the permlevel
+                }
+                else
+                {
+                    PermLevel = "Simplayer";  // default for registered Simplayers, in case for some reason not found in Permlevel Dictionary
+                }
+            }
+            Globals.CitTable.Rows.Add(Name, iSess, Registered, PermLevel, Citnum);
+            return Registered;
+        }
+
+        private bool CitIsRegistered(string Name)
+        {
+            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
+            string Registered = "no";
+            int rows = check.Count();
+            if (rows != 0)
+            {
+                foreach (DataRow z in check)
+                {
+                    Registered = z.Field<string>(2);
+                }
+            }
+            if (Registered == "yes")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void CitnameUpdateReg(string Name, string Reg)
+        {
+            //DataRow dr = Globals.CitList.Select("Citnum='" + Name + "'").;
+            foreach (DataRow dr in Globals.CitTable.Rows)
+            {
+                if (dr["Name"].ToString() == Name)
+                {
+                    dr["Registered"] = Reg;
+                }
+            }
+
+        }
+
+        private void CitnumUpdateReg(string Citnum, string Reg)
+        {
+
+            foreach (DataRow dr in Globals.CitTable.Rows)
+            {
+                if (dr[4].ToString() == Citnum)
+                {
+                    dr[2] = Reg;
+                    Console.WriteLine("I actually updated my reg status in the CitTable after registering.");
+                }
+            }
+
+        }
+
+        private bool CitIsInWorld(string Name)
+        {
+            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
+            int rows = check.Count();
+            if (rows != 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private string CitGetCitnum(string Name)
+        {
+            string Citnum = "0";
+            foreach (DataRow dr in Globals.CitTable.Rows)
+            {
+                if (dr["Name"] == Name)
+                {
+                    Citnum = dr["Citnum"].ToString();
+                }
+            }
+            return Citnum;
+
+        }
+
+        private int CitGetSession(string Name)
+        {
+            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
+            int Sess = 0;
+            int rows = check.Count();
+            if (rows != 0)
+            {
+                foreach (DataRow z in check)
+                {
+                    Sess = z.Field<int>(1);
+                }
+            }
+            return Sess;
+        }
+
+        private string CitGetName(string Citnum)
+        {
+            DataRow[] check = Globals.CitTable.Select("Citnum = '" + Citnum + "'");
+            string Name = "Name";
+            int rows = check.Count();
+            if (rows != 0)
+            {
+                foreach (DataRow z in check)
+                {
+                    Name = z.Field<string>(4);
+                }
+            }
+            return Name;
+        }
 
 
     }

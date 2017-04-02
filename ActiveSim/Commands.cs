@@ -168,27 +168,35 @@ namespace ActiveSim
             Stat(1, "Permissions", "Reloading permissions tables", "black");
             LoadPerms();
 
-            // We also need to add the citizen to the list of simplayers, checking first to see if he/she is already there
-            var value = Globals.SimplayerList.Find(item => item.Equals(sName));
-            if (value == null)
+            // If Captain registered someone else, check to see if the registered person is in-world, and if so start their HUD
+            if (lCmd.Count == 2)
             {
-                Globals.SimplayerList.Add(sName);
+                string Name = CitGetName(iCitnum.ToString());
+
+                if (CitIsInWorld(Name) == true)
+                {
+                    int tSess = CitGetSession(Name);
+                    DrawHUD(tSess);
+                    CitnumUpdateReg(iCitnum.ToString(), "yes");
+                }
+                
+            }
+            else    // otherwise assume self-registration and just draw HUD for self
+            {
+                DrawHUD(iSess);
+                CitnumUpdateReg(iCitnum.ToString(), "yes");
             }
 
-            // Send stats to chat
-            ConsolePrint(iSess, 0x000000, true, false, "Registration:\tRegistration successful. Stats for citnum " + iCitnum.ToString() + ":");
-            ConsolePrint(iSess, 0x000000, true, false, "Registration:\t[Currency: " + Globals.iCurrency.ToString() + " " + Globals.sCurrencyName + "s] [" + Globals.sCarryName + "s of carrying capacity: " + Globals.iCarryCap.ToString() + "]");
-            ConsolePrint(iSess, 0x000000, true, false, "Registration:\t[Permission level: " + level + "]");
-            //Response(iSess, iType, "Registration successful. Stats for citnum " + iCitnum.ToString() + ":");
-            //Response(iSess, iType, "[Currency: " + Globals.iCurrency.ToString() + " " + Globals.sCurrencyName + "s] [" + Globals.sCarryName + "s of carrying capacity: " + Globals.iCarryCap.ToString() + "]");
-            //Response(iSess, iType, "[Permission level: " + level + "]");
 
-            // Diaply HUD
-            DrawHUD(iSess);
-            
+            // Send stats to global console
+            ConsolePrint(0, 0x990000, true, false, "Registration:\tRegistration successful. Stats for citnum " + iCitnum.ToString() + ":");
+            ConsolePrint(0, 0x990000, true, false, "Registration:\t[Currency: " + Globals.iCurrency.ToString() + " " + Globals.sCurrencyName + "s] [" + Globals.sCarryName + "s of carrying capacity: " + Globals.iCarryCap.ToString() + "]");
+            ConsolePrint(0, 0x990000, true, false, "Registration:\t[Permission level: " + level + "]");
+       
 
         }
 
+        // Command DE-REGISTER
         private void DoDeRegister(string sName, int iType, int iSess, string[] cmd)
         {
 
@@ -256,6 +264,22 @@ namespace ActiveSim
             sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             sqlcmd.ExecuteNonQuery();
 
+            // Delete the HUD, and remove from CitTable
+            if (lCmd.Count == 2)
+            {
+                // Get session of the other citizen
+                string Name = CitGetName(iCitnum.ToString());
+                int tSess = CitGetSession(Name);
+
+                CitnumUpdateReg(iCitnum.ToString(), "no");
+                EraseHUD(tSess);
+            }
+            else
+            {
+                CitnumUpdateReg(iCitnum.ToString(), "no");
+                EraseHUD(iSess);
+            }
+
             // When we delete a Simplayer from the CitnumPermissionLevel table, we need to reload the permissions tables to make sure they're current
             Stat(1, "Permissions", "Reloading permissions tables", "black");
             LoadPerms();
@@ -264,6 +288,7 @@ namespace ActiveSim
 
         }
 
+        // Command HUD
         private void DoHUD(string sName, int iType, int iSess, string[] cmd)
         {
             int iCitnum = GetCitnum(sName);
@@ -294,8 +319,7 @@ namespace ActiveSim
 
 
         }
-
-
+        
         // Command SIM
         private void DoSim(string sName, int iType, int iSess, string[] cmd)
         {
@@ -346,6 +370,7 @@ namespace ActiveSim
             
         }
 
+        // Command Present
         private void DoPresent(string sName, int iType, int iSess, string[] cmd)
         {
             int iCitnum = GetCitnum(sName);
@@ -358,49 +383,25 @@ namespace ActiveSim
                 return;
             }
 
-            List<string> lCmd = new List<string>();
-            foreach (string d in cmd)
+            String q = "";
+            List<string> Names = new List<string>();
+            List<string> Citnums = new List<string>();
+            foreach (DataRow dd in Globals.CitTable.Rows)
             {
-                lCmd.Add(d);
+                Names.Add(dd.Field<string>(0));
+                Citnums.Add(dd.Field<string>(4));
+            }
+            int i = 0;
+            foreach(string d in Names)
+            {
+                q = q + " " + d + "(" + Citnums[i] + ") --";
+                i = i + 1;
             }
 
-            string q;
-
-            if (lCmd.Count == 2)
-            {
-                if (lCmd[1] == "simplayers")
-                {
-                    q = "Simplayers in world:";
-                    foreach (string d in Globals.SimplayerList)
-                    {
-                        q = q + " " + d;
-                    }
-                    Response(iSess, iType, q);
-                    return;
-                }
-                if (lCmd[1] == "citizens")
-                {
-                    q = "Total citizens in world:";
-                    foreach (string d in Globals.CitList)
-                    {
-                        q = q + " " + d;
-                    }
-                    Response(iSess, iType, q);
-                    return;
-                }
-            }
-            else
-            {
-                q = "Total citizens in world:";
-                foreach (string d in Globals.CitList)
-                {
-                    q = q + " " + d;
-                }
-                Response(iSess, iType, q);
-                return;
-            }
+            ConsolePrint(0, 0x990000, false, false, q);
         }
 
+        // Command Console
         private void DoConsole(string sName, int iType, int iSess, string[] cmd)
         {
             ConsolePrint(iSess, 0x009999, true, false, "Testing:\tThis is a test message.");
