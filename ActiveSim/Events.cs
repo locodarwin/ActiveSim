@@ -146,14 +146,17 @@ namespace ActiveSim
 
         private void OnEventHUDClick(IInstance sender)
         {
+            var Sess = sender.Attributes.HudElementSession;
             var id = sender.Attributes.HudElementId;
             var x = sender.Attributes.HudElementClickX;
             var y = sender.Attributes.HudElementClickY;
             var z = sender.Attributes.HudElementClickZ;
 
-            Stat(1, "HUD Click", "Simplayer " + sender.Attributes.AvatarName + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
-            Chat(1, "HUD Click", "Simplayer " + sender.Attributes.AvatarName + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
-            _instance.Say("Simplayer " + sender.Attributes.AvatarName + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".");
+
+
+            Stat(1, "HUD Click", "Simplayer session " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+            Chat(1, "HUD Click", "Simplayer " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+            _instance.Say("Simplayer " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".");
         }
 
     }

@@ -199,7 +199,7 @@ namespace ActiveSim
             // Enter world
             Stat(1, "World Login", "Logging into world " + Globals.sWorld + ".", "black");
             var rc = _instance.Enter(Globals.sWorld);
-            //_instance.Attributes.ServerCaretakers = _instance.Attributes.LoginName.ToString();
+            _instance.Attributes.ServerCaretakers = _instance.Attributes.LoginName.ToString();
             if (rc != Result.Success)
             {
                 Stat(1, "Error", "Failed to log into world " + Globals.sWorld + " (reason:" + rc + ").", "red");
@@ -248,8 +248,19 @@ namespace ActiveSim
                 return;
             }
 
+            aTimer.Stop();
+            
             // Dispose of the API instance, reset all flags
-            _instance.Dispose();
+            _instance.HudDestroy(0, 1);
+            _instance.HudDestroy(0, 2);
+            _instance.HudDestroy(0, 3);
+            _instance.HudDestroy(0, 4);
+            _instance.HudDestroy(0, 5);
+            Utility.Wait(400);
+            
+
+            
+
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.iInWorld = false;
@@ -265,6 +276,8 @@ namespace ActiveSim
             butSimStart.Enabled = false;
             butSimStatus.Enabled = false;
             butSimStop.Enabled = false;
+
+            _instance.Dispose();
         }
 
         private void butSendChat_Click(object sender, EventArgs e)
@@ -317,6 +330,12 @@ namespace ActiveSim
         // Form1 is closing; let's do a clean log out of the universe first
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            _instance.HudDestroy(0, 1);
+            _instance.HudDestroy(0, 2);
+            _instance.HudDestroy(0, 3);
+            _instance.HudDestroy(0, 4);
+            _instance.HudDestroy(0, 5);
+
             _instance.Dispose();
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;

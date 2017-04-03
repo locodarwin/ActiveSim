@@ -21,10 +21,13 @@ namespace ActiveSim
             string strip = sMsg.Substring(1);
             strip = strip.Trim();
             string[] cmd = strip.Split(' ');
-            
+
             switch (cmd[0])
             {
                 case "version":
+                    DoVersion(sName, iType, iSession, cmd);
+                    break;
+                case "ver":
                     DoVersion(sName, iType, iSession, cmd);
                     break;
                 case "register":
@@ -44,6 +47,9 @@ namespace ActiveSim
                     break;
                 case "console":
                     DoConsole(sName, iType, iSession, cmd);
+                    break;
+                case "simplayers":
+                    DoSimplayers(sName, iType, iSession, cmd);
                     break;
 
             }
@@ -120,7 +126,7 @@ namespace ActiveSim
                         Response(iSess, iType, "Error: '" + lCmd[1] + "' is not a valid citnum.");
                         return;
                     }
-                    
+
                 }
                 else
                 {
@@ -171,28 +177,34 @@ namespace ActiveSim
             // If Captain registered someone else, check to see if the registered person is in-world, and if so start their HUD
             if (lCmd.Count == 2)
             {
-                string Name = CitGetName(iCitnum.ToString());
 
-                if (CitIsInWorld(Name) == true)
+                if (CitnumIsInWorld(iCitnum.ToString()) == true)
                 {
                     int tSess = CitGetSession(Name);
                     DrawHUD(tSess);
                     CitnumUpdateReg(iCitnum.ToString(), "yes");
+                    CitnumUpdatePerm(iCitnum.ToString(), level);
+
+                    // update permission level also
+
                 }
-                
+
             }
             else    // otherwise assume self-registration and just draw HUD for self
             {
                 DrawHUD(iSess);
                 CitnumUpdateReg(iCitnum.ToString(), "yes");
+                CitnumUpdatePerm(iCitnum.ToString(), level);
+
+                //Update permission level also
             }
 
 
             // Send stats to global console
             ConsolePrint(0, 0x990000, true, false, "Registration:\tRegistration successful. Stats for citnum " + iCitnum.ToString() + ":");
-            ConsolePrint(0, 0x990000, true, false, "Registration:\t[Currency: " + Globals.iCurrency.ToString() + " " + Globals.sCurrencyName + "s] [" + Globals.sCarryName + "s of carrying capacity: " + Globals.iCarryCap.ToString() + "]");
+            ConsolePrint(0, 0x990000, true, false, "Registration:\t[Currency: " + Globals.iCurrency.ToString() + " " + Globals.sCurrencyName + "s] [Carry capacity: " + Globals.iCarryCap.ToString() + " " + Globals.sCarryName + "s]");
             ConsolePrint(0, 0x990000, true, false, "Registration:\t[Permission level: " + level + "]");
-       
+
 
         }
 
@@ -200,7 +212,6 @@ namespace ActiveSim
         private void DoDeRegister(string sName, int iType, int iSess, string[] cmd)
         {
 
-            // TODO - need a way for captains to do this on behalf of citizens
 
             int iCitnum = GetCitnum(sName);
             Stat(1, "CMD", "Command: de-register (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
@@ -248,7 +259,7 @@ namespace ActiveSim
             // Do we have any entries for this citnum?
             if (reader.HasRows == false)
             {
-                // We've got rows returned! Respond back with this fact and don't add anything.
+                // We've got no rows returned! Respond back with this fact and don't add anything.
                 Response(iSess, iType, "Citnum " + iCitnum + " is not registered for this Sim; no action taken.");
                 return;
             }
@@ -317,9 +328,18 @@ namespace ActiveSim
                 _instance.HudDestroy(iSess, 5);
             }
 
+            if (cmd[1] == "eraseall")
+            {
+                _instance.HudDestroy(0, 1);
+                _instance.HudDestroy(0, 2);
+                _instance.HudDestroy(0, 3);
+                _instance.HudDestroy(0, 4);
+                _instance.HudDestroy(0, 5);
+            }
+
 
         }
-        
+
         // Command SIM
         private void DoSim(string sName, int iType, int iSess, string[] cmd)
         {
@@ -341,7 +361,7 @@ namespace ActiveSim
                 butSimStart.Enabled = false;
                 butSimConfig.Enabled = false;
                 butSimStop.Enabled = true;
-                                
+
                 // Load Sim Data
                 SimDataLoad();
 
@@ -367,7 +387,7 @@ namespace ActiveSim
                 Stat(1, "Sim Stop", "Stopped Active Simulator profile '" + Globals.sSimProfile + "'", "black");
                 Response(iSess, iType, "Stopped Active Simulator profile '" + Globals.sSimProfile + "'");
             }
-            
+
         }
 
         // Command Present
@@ -386,19 +406,31 @@ namespace ActiveSim
             String q = "";
             List<string> Names = new List<string>();
             List<string> Citnums = new List<string>();
+            List<string> Registered = new List<string>();
+            List<string> PermissionLevel = new List<string>();
             foreach (DataRow dd in Globals.CitTable.Rows)
             {
                 Names.Add(dd.Field<string>(0));
                 Citnums.Add(dd.Field<string>(4));
+                Registered.Add(dd.Field<string>(2));
+                PermissionLevel.Add(dd.Field<string>(3));
             }
             int i = 0;
-            foreach(string d in Names)
+            foreach (string d in Names)
             {
-                q = q + " " + d + "(" + Citnums[i] + ") --";
+                q = d + " (" + Citnums[i] + ") -- ";
+                if (Registered[i] == "yes")
+                {
+                    q = q + "Registered (" + PermissionLevel[i] + ")";
+                }
+                else
+                {
+                    q = q + "Not registered";
+                }
+                ConsolePrint(iSess, 0x990000, false, false, q);
                 i = i + 1;
             }
 
-            ConsolePrint(0, 0x990000, false, false, q);
         }
 
         // Command Console
@@ -407,5 +439,34 @@ namespace ActiveSim
             ConsolePrint(iSess, 0x009999, true, false, "Testing:\tThis is a test message.");
         }
 
+
+        // Command SIMPLAYERS
+        private void DoSimplayers(string sName, int iType, int iSess, string[] cmd)
+        {
+
+
+            int iCitnum = GetCitnum(sName);
+            Stat(1, "CMD", "Command: simplayers (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
+
+            string sql = "select * from UserSheet";
+            SQLiteCommand sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            SQLiteDataReader reader = sqlcmd.ExecuteReader();
+
+            // Do we have any entries for this citnum?
+            if (reader.HasRows == false)
+            {
+                // We've got no rows returned! Respond back with this fact and don't add anything.
+                Response(iSess, iType, "There are no registered citizens in this Sim.");
+                return;
+            }
+            else
+            {
+                //foreach ()
+            }
+
+            reader.Close();
+
+
+        }
     }
 }

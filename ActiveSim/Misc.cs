@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Data;
+using AW;
 
 namespace ActiveSim
 {
@@ -285,12 +286,25 @@ namespace ActiveSim
 
         private void CitnameUpdateReg(string Name, string Reg)
         {
-            //DataRow dr = Globals.CitList.Select("Citnum='" + Name + "'").;
             foreach (DataRow dr in Globals.CitTable.Rows)
             {
-                if (dr["Name"].ToString() == Name)
+                if (dr[0].ToString() == Name)
                 {
-                    dr["Registered"] = Reg;
+                    dr[2] = Reg;
+                }
+            }
+
+        }
+
+        private void CitnumUpdatePerm(string Citnum, string Perm)
+        {
+
+            foreach (DataRow dr in Globals.CitTable.Rows)
+            {
+                if (dr[4].ToString() == Citnum)
+                {
+                    dr[3] = Perm;
+                    //Console.WriteLine("I actually updated my perm status in the CitTable after registering.");
                 }
             }
 
@@ -304,21 +318,34 @@ namespace ActiveSim
                 if (dr[4].ToString() == Citnum)
                 {
                     dr[2] = Reg;
-                    Console.WriteLine("I actually updated my reg status in the CitTable after registering.");
+                    //Console.WriteLine("I actually updated my reg status in the CitTable after registering.");
                 }
             }
 
         }
 
-        private bool CitIsInWorld(string Name)
+        private bool CitnumIsInWorld(string Citnum)
         {
-            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
-            int rows = check.Count();
-            if (rows != 0)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
-                return true;
+                if (dr[4].ToString() == Citnum)
+                {
+                    return true;
+                }
             }
             return false;
+        
+
+
+
+
+        //    DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
+        //    int rows = check.Count();
+        //    if (rows != 0)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
         }
 
         private string CitGetCitnum(string Name)
