@@ -109,20 +109,12 @@ namespace ActiveSim
         {
             
             string Name = sender.Attributes.AvatarName;
-            string Citnum = sender.Attributes.AvatarCitizen.ToString();
+            //string Citnum = sender.Attributes.AvatarCitizen.ToString();
 
             // Remove the leaving citizen from the CitTable
-            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
-            int rows = check.Count();
-            if (rows != 0)
-            {
-                foreach (DataRow z in check)
-                {
-                    Globals.CitTable.Rows.Remove(z);
-                }
-            }
+            CitTableRemove(Name);
 
-            // If Captain, announce leaving
+            // If Captain, announce leaving, if not, just log the fact
             if (Name == Globals.sCaptain)
             {
                 Stat(1, Globals.sBotName, "Captain " + Name + " has left the deck.", "black");
@@ -152,8 +144,7 @@ namespace ActiveSim
             var y = sender.Attributes.HudElementClickY;
             var z = sender.Attributes.HudElementClickZ;
 
-
-
+            
             Stat(1, "HUD Click", "Simplayer session " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
             Chat(1, "HUD Click", "Simplayer " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
             _instance.Say("Simplayer " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".");

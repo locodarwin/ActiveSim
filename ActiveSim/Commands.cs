@@ -51,6 +51,9 @@ namespace ActiveSim
                 case "simplayers":
                     DoSimplayers(sName, iType, iSession, cmd);
                     break;
+                case "give":
+                    DoGive(sName, iType, iSession, cmd);
+                    break;
 
             }
             //Stat(1, "Test", cmd, "black");
@@ -74,12 +77,7 @@ namespace ActiveSim
 
         }
 
-        // Method to get citizen number
-        private int GetCitnum(string sName)
-        {
-            _instance.CitizenAttributesByName(sName);
-            return _instance.Attributes.CitizenNumber;
-        }
+        
 
         // Command VERSION
         private void DoVersion(string sName, int iType, int iSess, string[] cmd)
@@ -109,24 +107,22 @@ namespace ActiveSim
                 lCmd.Add(d);
             }
 
-            // Count number of commands parameters. If it's more than one, assume the second is a citnum to be registered by the Captain
+            // Count number of commands parameters. If it's more than one, assume the second is a citname to be registered by the Captain
             if (lCmd.Count == 2)
             {
                 // check to see if the asker is the Captain
                 if (iCitnum.ToString() == Globals.sCaptain)
                 {
+                    // If so, let's set the parameters for the registration (name, citnum) accordingly
+                    sName = lCmd[1];
+                    iCitnum = GetCitnum(sName);
 
-                    // Make sure the second command is a number
-                    try
+                    // If the citnum comes back as zero, that means the citizen doesn't exist (by that name)
+                    if (iCitnum == 0)
                     {
-                        iCitnum = Convert.ToInt32(lCmd[1]);
-                    }
-                    catch (Exception e)
-                    {
-                        Response(iSess, iType, "Error: '" + lCmd[1] + "' is not a valid citnum.");
+                        Response(iSess, iType, "Error: '" + lCmd[1] + "' is not a valid citizen.");
                         return;
                     }
-
                 }
                 else
                 {
@@ -146,13 +142,13 @@ namespace ActiveSim
             if (reader.HasRows == true)
             {
                 // We've got rows returned! Respond back with this fact and don't add anything.
-                Response(iSess, iType, "Citnum " + iCitnum + " is already registered for this Sim; no action taken.");
+                Response(iSess, iType, sName + " (" + iCitnum.ToString() + ") is already registered for this Sim; no action taken.");
                 return;
             }
             reader.Close();
 
             // Add the person's registration to database, use default values in the context of the current Profile (important! Could have many profiles)
-            sql = "INSERT INTO UserSheet VALUES ('" + Globals.sSimProfile + "', '" + iCitnum.ToString() + "', '" + Globals.iCurrency.ToString() + "', '" + Globals.iCarryCap.ToString() + "')";
+            sql = "INSERT INTO UserSheet VALUES ('" + Globals.sSimProfile + "', '" + iCitnum.ToString() + "', '" + sName + "', '" + Globals.iCurrency.ToString() + "', '" + Globals.iCarryCap.ToString() + "')";
             sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             sqlcmd.ExecuteNonQuery();
 
@@ -201,7 +197,7 @@ namespace ActiveSim
 
 
             // Send stats to global console
-            ConsolePrint(0, 0x990000, true, false, "Registration:\tRegistration successful. Stats for citnum " + iCitnum.ToString() + ":");
+            ConsolePrint(0, 0x990000, true, false, "Registration:\tRegistration successful. Stats for " + sName + " (" + iCitnum.ToString() + "):");
             ConsolePrint(0, 0x990000, true, false, "Registration:\t[Currency: " + Globals.iCurrency.ToString() + " " + Globals.sCurrencyName + "s] [Carry capacity: " + Globals.iCarryCap.ToString() + " " + Globals.sCarryName + "s]");
             ConsolePrint(0, 0x990000, true, false, "Registration:\t[Permission level: " + level + "]");
 
@@ -233,14 +229,14 @@ namespace ActiveSim
                 if (iCitnum.ToString() == Globals.sCaptain)
                 {
 
-                    // Make sure the second command is a number
-                    try
+                    // If so, let's set the parameters for the registration (name, citnum) accordingly
+                    sName = lCmd[1];
+                    iCitnum = GetCitnum(sName);
+
+                    // If the citnum comes back as zero, that means the citizen doesn't exist (by that name)
+                    if (iCitnum == 0)
                     {
-                        iCitnum = Convert.ToInt32(lCmd[1]);
-                    }
-                    catch (Exception e)
-                    {
-                        Response(iSess, iType, "Error: '" + lCmd[1] + "' is not a valid citnum.");
+                        Response(iSess, iType, "Error: '" + lCmd[1] + "' is not a valid citizen.");
                         return;
                     }
 
@@ -281,9 +277,13 @@ namespace ActiveSim
                 // Get session of the other citizen
                 string Name = CitGetName(iCitnum.ToString());
                 int tSess = CitGetSession(Name);
-
+                
                 CitnumUpdateReg(iCitnum.ToString(), "no");
-                EraseHUD(tSess);
+                if (tSess != 0)
+                {
+                    EraseHUD(tSess);
+                }
+                
             }
             else
             {
@@ -448,6 +448,13 @@ namespace ActiveSim
             int iCitnum = GetCitnum(sName);
             Stat(1, "CMD", "Command: simplayers (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
 
+            // Check permissions
+            if (CheckPerms(iCitnum, cmd[0]) == false)
+            {
+                Response(iSess, iType, "Sorry, " + sName + ", but you do not have permission to use the " + cmd[0] + " command.");
+                return;
+            }
+
             string sql = "select * from UserSheet";
             SQLiteCommand sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             SQLiteDataReader reader = sqlcmd.ExecuteReader();
@@ -461,12 +468,70 @@ namespace ActiveSim
             }
             else
             {
-                //foreach ()
+                while (reader.Read())
+                {
+                    // do stuff
+                    int num = Convert.ToInt32(reader["Citnum"]);
+                    string sOut = reader["Citname"].ToString() + " (";
+                    sOut = sOut + num + ") -- ";
+                    sOut = sOut + GetPermLevel(num);
+
+                    ConsolePrint(iSess, 0x009999, false, false, sOut);
+
+                    //Response(iSess, iType, "There ARE registered citizens in this Sim.");
+                }
+            }
+            reader.Close();
+            
+        }
+
+
+        // DoGive /give [citname] [assetnum] [type]
+        private void DoGive(string sName, int iType, int iSess, string[] cmd)
+        {
+            int iCitnum = GetCitnum(sName);
+            
+            Stat(1, "CMD", "Command: register (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
+
+            // Check permissions
+            if (CheckPerms(iCitnum, cmd[0]) == false)
+            {
+                Response(iSess, iType, "Sorry, " + sName + ", but you do not have permission to use the " + cmd[0] + " command.");
+                return;
             }
 
-            reader.Close();
+            // Make sure the command has the right number of parameters
+            if (cmd.Length != 4)
+            {
+                Response(iSess, iType, "Error: wrong number of parameters. Usage: /give [citname] [assetnum] [type]");
+                return;
+            }
 
+            int rCitnum = GetCitnum(cmd[1]);
+
+            // Check to make sure citnum we want to give to is registered
+            if (CheckRegistered(cmd[1]) == false)
+            {
+                Response(iSess, iType, "Error: " + cmd[1] + " (" + rCitnum + ") is not a registered simplayer.");
+                return;
+            }
+
+            // Give to citnum
+            bool rc = AddAssetToInv(rCitnum, Convert.ToInt32(cmd[2]), cmd[3]);
+            if (rc == true)
+            {
+                Response(iSess, iType, "AssetNum " + cmd[2] + " of type " + cmd[3] + " given to " + cmd[1]);
+            }
+            else
+            {
+                Response(iSess, iType, "Failed: AssetNum " + cmd[2] + " of type " + cmd[3] + " was not given to " + cmd[1]);
+            }
 
         }
+
+
+
+
+
     }
 }

@@ -161,7 +161,9 @@ namespace ActiveSim
                 butLogOut.Enabled = true;
             }
 
-            // Add columns to CitTable
+            // Clear and then add columns to CitTable
+            Globals.CitTable.Clear();
+            Globals.CitTable.Columns.Clear();
             Globals.CitTable.Columns.Add("Name", typeof(string));
             Globals.CitTable.Columns.Add("Session", typeof(int));
             Globals.CitTable.Columns.Add("Registered", typeof(string));
