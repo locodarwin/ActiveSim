@@ -54,6 +54,9 @@ namespace ActiveSim
                 case "give":
                     DoGive(sName, iType, iSession, cmd);
                     break;
+                case "inv":
+                    DoInv(sName, iType, iSession, cmd);
+                    break;
 
             }
             //Stat(1, "Test", cmd, "black");
@@ -464,7 +467,6 @@ namespace ActiveSim
             {
                 // We've got no rows returned! Respond back with this fact and don't add anything.
                 Response(iSess, iType, "There are no registered citizens in this Sim.");
-                return;
             }
             else
             {
@@ -491,7 +493,7 @@ namespace ActiveSim
         {
             int iCitnum = GetCitnum(sName);
             
-            Stat(1, "CMD", "Command: register (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
+            Stat(1, "CMD", "Command: /give (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
 
             // Check permissions
             if (CheckPerms(iCitnum, cmd[0]) == false)
@@ -530,7 +532,85 @@ namespace ActiveSim
         }
 
 
+        // DoInv /inv and inv [simplayer]
+        private void DoInv(string sName, int iType, int iSess, string[] cmd)
+        {
+            int iCitnum = GetCitnum(sName);
+            Stat(1, "CMD", "Command: inv (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
 
+            // Check permissions
+            if (CheckPerms(iCitnum, cmd[0]) == false)
+            {
+                Response(iSess, iType, "Sorry, " + sName + ", but you do not have permission to use the " + cmd[0] + " command.");
+                return;
+            }
+
+            // If the command has more than one parameter, test to see if it's the captain who issued it, then set parameters accordingly
+            if (cmd.Length > 1)
+            {
+
+                // check to see if the asker is the Captain
+                if (iCitnum.ToString() == Globals.sCaptain)
+                {
+                    // If so, let's set the parameters for the registration (name, citnum) accordingly
+                    sName = cmd[1];
+                    iCitnum = GetCitnum(sName);
+
+                    // check to see if the citnum is real or not
+                    if (iCitnum == 0)
+                    {
+                        Response(iSess, iType, "Error: '" + cmd[1] + "' is not a valid citizen.");
+                        return;
+                    }
+                }
+                else
+                {
+                    Response(iSess, iType, "Sorry, but you do not have permission to view the inventory of another citizen.");
+                    return;
+                }
+
+            }
+
+            // We need to check to make sure the citnum is registered
+            if (CitIsRegistered(sName) == false)
+            {
+                Response(iSess, iType, "Error: citizen " + sName + " (" + iCitnum + ") is not a registered simplayer.");
+                return;
+            }
+
+            // Passed all the tests, now let's load up the inventory of the citnum
+            string sql = "select * from UserInventory where Citnum = '" + iCitnum.ToString() + "' and SimProfile = '" + Globals.sSimProfile + "'";
+            SQLiteCommand sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            SQLiteDataReader reader = sqlcmd.ExecuteReader();
+
+            // Are there any inventory items for this citnum?
+            if (reader.HasRows == false)
+            {
+                // We've got no rows returned! Respond back with this fact and don't do anything else
+                ConsolePrint(iSess, 0x009999, false, false, "No items in inventory.");
+            }
+            else
+            {
+                // Yes, there is inventory - display it
+                while (reader.Read())
+                {
+
+                    string item = reader["Name"].ToString();
+                    string value = reader["Value"].ToString();
+                    string weight = reader["Weight"].ToString();
+                    string type = reader["Type"].ToString();
+
+                    string sOut = item + " [v: " + value + "] [w: " + weight + "] [t: " + type + "]";
+
+                    ConsolePrint(iSess, 0x990000, true, false, sOut);
+
+                    //Response(iSess, iType, "There ARE registered citizens in this Sim.");
+                }
+            }
+            reader.Close();
+
+
+        }
 
 
     }
