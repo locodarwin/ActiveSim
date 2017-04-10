@@ -230,6 +230,17 @@ namespace ActiveSim
             _instance.HudDestroy(iSess, 5);
         }
 
+
+        // Method to get citizen number
+        private int GetCitnum(string sName)
+        {
+            _instance.CitizenAttributesByName(sName);
+            return _instance.Attributes.CitizenNumber;
+        }
+
+
+
+
         private string CitTableAdd(string Name, int iSess, string Citnum)
         {
             string Registered;

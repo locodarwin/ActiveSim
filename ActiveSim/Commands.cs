@@ -74,13 +74,7 @@ namespace ActiveSim
 
         }
 
-        // Method to get citizen number
-        private int GetCitnum(string sName)
-        {
-            _instance.CitizenAttributesByName(sName);
-            return _instance.Attributes.CitizenNumber;
-        }
-
+        
         // Command VERSION
         private void DoVersion(string sName, int iType, int iSess, string[] cmd)
         {

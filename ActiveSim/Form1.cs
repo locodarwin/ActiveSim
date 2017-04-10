@@ -80,8 +80,8 @@ namespace ActiveSim
             public static int iCarryCap = 0;
 
             // World user list
-            public static List<string> CitList = new List<string>();
-            public static List<string> SimplayerList = new List<string>();
+            //public static List<string> CitList = new List<string>();
+            //public static List<string> SimplayerList = new List<string>();
             public static DataTable CitTable = new DataTable();
             
 
