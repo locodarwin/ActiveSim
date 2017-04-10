@@ -98,6 +98,16 @@ namespace ActiveSim
             return GotIt;
         }
 
+        private string GetPermLevel(int iCitnum)
+        {
+            if (Globals.CitnumPermLevel.TryGetValue(iCitnum.ToString(), out string value))
+            {
+                return value;
+            }
+            return null;
+            
+        }
+
         private bool CheckRegistered(string sName)
         {
             int iCitnum = GetCitnum(sName);
@@ -230,16 +240,12 @@ namespace ActiveSim
             _instance.HudDestroy(iSess, 5);
         }
 
-
         // Method to get citizen number
         private int GetCitnum(string sName)
         {
             _instance.CitizenAttributesByName(sName);
             return _instance.Attributes.CitizenNumber;
         }
-
-
-
 
         private string CitTableAdd(string Name, int iSess, string Citnum)
         {
@@ -275,9 +281,42 @@ namespace ActiveSim
             return Registered;
         }
 
+        private void CitTableRemove(string Name)
+        {
+            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
+            int rows = check.Count();
+            if (rows != 0)
+            {
+                foreach (DataRow z in check)
+                {
+                    Globals.CitTable.Rows.Remove(z);
+                }
+            }
+        }
+
         private bool CitIsRegistered(string Name)
         {
             DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
+            string Registered = "no";
+            int rows = check.Count();
+            if (rows != 0)
+            {
+                foreach (DataRow z in check)
+                {
+                    Registered = z.Field<string>(2);
+                }
+            }
+            if (Registered == "yes")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool CitIsRegistered(int iCitnum)
+        {
+            DataRow[] check = Globals.CitTable.Select("Citnum = '" + iCitnum.ToString() + "'");
             string Registered = "no";
             int rows = check.Count();
             if (rows != 0)
