@@ -274,7 +274,7 @@ namespace ActiveSim
             sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             sqlcmd.ExecuteNonQuery();
 
-            // Delete the HUD, and remove from CitTable
+            // Delete the HUD, and remove from CitsInWorld
             if (lCmd.Count == 2)
             {
                 // Get session of the other citizen
@@ -411,7 +411,7 @@ namespace ActiveSim
             List<string> Citnums = new List<string>();
             List<string> Registered = new List<string>();
             List<string> PermissionLevel = new List<string>();
-            foreach (DataRow dd in Globals.CitTable.Rows)
+            foreach (DataRow dd in Globals.CitsInWorld.Rows)
             {
                 Names.Add(dd.Field<string>(0));
                 Citnums.Add(dd.Field<string>(4));

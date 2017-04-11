@@ -64,15 +64,17 @@ namespace ActiveSim
             public static string sPassword = "hidden";
             public static string sWorld = "simulator";
             public static int iXPos = 0;
-            public static int iYPos = 690;
-            public static int iZPos = 500;
+            public static int iYPos = 0;
+            public static int iZPos = 0;
             public static int iYaw = 0;
             public static int iAV = 1;
 
+            // State variables
             public static bool iInUniv = false;
             public static bool iInWorld = false;
             public static bool iSimRun = false;
 
+            // Default SimStats
             public static string sSimProfile = "Default";
             public static string sCurrencyName = "gold";
             public static int iCurrency = 0;
@@ -80,11 +82,8 @@ namespace ActiveSim
             public static int iCarryCap = 0;
 
             // World user list
-            //public static List<string> CitList = new List<string>();
-            //public static List<string> SimplayerList = new List<string>();
-            public static DataTable CitTable = new DataTable();
+            public static DataTable CitsInWorld = new DataTable();
             
-
             // Permissions dictionaries
             public static Dictionary<string, string> CitnumPermLevel = new Dictionary<string, string>();
             public static DataTable CMDPermLevel = new DataTable();
@@ -161,14 +160,14 @@ namespace ActiveSim
                 butLogOut.Enabled = true;
             }
 
-            // Clear and then add columns to CitTable
-            Globals.CitTable.Clear();
-            Globals.CitTable.Columns.Clear();
-            Globals.CitTable.Columns.Add("Name", typeof(string));
-            Globals.CitTable.Columns.Add("Session", typeof(int));
-            Globals.CitTable.Columns.Add("Registered", typeof(string));
-            Globals.CitTable.Columns.Add("PermLevel", typeof(string));
-            Globals.CitTable.Columns.Add("Citnum", typeof(string));
+            // Clear and then add columns to CitsInWorld
+            Globals.CitsInWorld.Clear();
+            Globals.CitsInWorld.Columns.Clear();
+            Globals.CitsInWorld.Columns.Add("Name", typeof(string));
+            Globals.CitsInWorld.Columns.Add("Session", typeof(int));
+            Globals.CitsInWorld.Columns.Add("Registered", typeof(string));
+            Globals.CitsInWorld.Columns.Add("PermLevel", typeof(string));
+            Globals.CitsInWorld.Columns.Add("Citnum", typeof(string));
 
             // Initialize and start the timer
             aTimer = new Timer();

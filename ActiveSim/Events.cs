@@ -68,20 +68,20 @@ namespace ActiveSim
             }
 
 
-            // If the entity is already in the CitTable, remove
-            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
+            // If the entity is already in the CitsInWorld, remove
+            DataRow[] check = Globals.CitsInWorld.Select("Name = '" + Name + "'");
             int rows = check.Count();
             if (rows != 0)
             {
                 foreach (DataRow z in check)
                 {
-                    Globals.CitTable.Rows.Remove(z);
+                    Globals.CitsInWorld.Rows.Remove(z);
                 }
             }
 
             
 
-            // Add to the CitTable, return whether or not is registered
+            // Add to the CitsInWorld, return whether or not is registered
             string Registered = CitTableAdd(Name, Sess, Citnum);
 
             // Log the event in the status window, and draw HUD if the citizen is registered
@@ -111,7 +111,7 @@ namespace ActiveSim
             string Name = sender.Attributes.AvatarName;
             //string Citnum = sender.Attributes.AvatarCitizen.ToString();
 
-            // Remove the leaving citizen from the CitTable
+            // Remove the leaving citizen from the CitsInWorld
             CitTableRemove(Name);
 
             // If Captain, announce leaving, if not, just log the fact
