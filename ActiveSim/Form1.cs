@@ -90,7 +90,7 @@ namespace ActiveSim
             public static DataTable CMDPermLevel = new DataTable();
 
             // Sim rules
-            public static string sCaptain = "318855";
+            public static string sCaptain = "361395";
 
             // SQLITE connection
             public static SQLiteConnection m_db;
