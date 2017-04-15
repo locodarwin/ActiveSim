@@ -11,6 +11,25 @@ namespace ActiveSim
 {
     public partial class Form1
     {
+
+        // Method to respond back on the results of the command
+        private void Response(int iSess, int iType, string sMsg)
+        {
+            if (iType == 2)
+            {
+                _instance.Whisper(iSess, sMsg);
+                Stat(1, "Response", "(whispered): " + sMsg, "blue");
+                Chat(1, Globals.sBotName, "(whispered): " + sMsg, "blue");
+            }
+            else
+            {
+                _instance.Say(sMsg);
+                Stat(1, "Response", sMsg, "black");
+                Chat(1, Globals.sBotName, sMsg, "black");
+            }
+
+        }
+
         private void LoadPerms()
         {
             // Get all rows of the CitnumPermissionLevel table that match the current SimProfile and put in a datatable

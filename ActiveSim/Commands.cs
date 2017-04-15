@@ -62,26 +62,6 @@ namespace ActiveSim
             //Stat(1, "Test", cmd, "black");
         }
 
-        // Method to respond back on the results of the command
-        private void Response(int iSess, int iType, string sMsg)
-        {
-            if (iType == 2)
-            {
-                _instance.Whisper(iSess, sMsg);
-                Stat(1, "Response", "(whispered): " + sMsg, "blue");
-                Chat(1, Globals.sBotName, "(whispered): " + sMsg, "blue");
-            }
-            else
-            {
-                _instance.Say(sMsg);
-                Stat(1, "Response", sMsg, "black");
-                Chat(1, Globals.sBotName, sMsg, "black");
-            }
-
-        }
-
-        
-
         // Command VERSION
         private void DoVersion(string sName, int iType, int iSess, string[] cmd)
         {
@@ -608,7 +588,7 @@ namespace ActiveSim
                 }
             }
             reader.Close();
-
+            
 
         }
 
