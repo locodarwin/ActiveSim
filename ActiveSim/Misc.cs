@@ -359,26 +359,26 @@ namespace ActiveSim
                     PermLevel = "Simplayer";  // default for registered Simplayers, in case for some reason not found in Permlevel Dictionary
                 }
             }
-            Globals.CitsInWorld.Rows.Add(Name, iSess, Registered, PermLevel, Citnum);
+            Globals.CitTable.Rows.Add(Name, iSess, Registered, PermLevel, Citnum);
             return Registered;
         }
 
         private void CitTableRemove(string Name)
         {
-            DataRow[] check = Globals.CitsInWorld.Select("Name = '" + Name + "'");
+            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
             int rows = check.Count();
             if (rows != 0)
             {
                 foreach (DataRow z in check)
                 {
-                    Globals.CitsInWorld.Rows.Remove(z);
+                    Globals.CitTable.Rows.Remove(z);
                 }
             }
         }
 
         private bool CitIsRegistered(string Name)
         {
-            DataRow[] check = Globals.CitsInWorld.Select("Name = '" + Name + "'");
+            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
             string Registered = "no";
             int rows = check.Count();
             if (rows != 0)
@@ -398,7 +398,7 @@ namespace ActiveSim
 
         private bool CitIsRegistered(int iCitnum)
         {
-            DataRow[] check = Globals.CitsInWorld.Select("Citnum = '" + iCitnum.ToString() + "'");
+            DataRow[] check = Globals.CitTable.Select("Citnum = '" + iCitnum.ToString() + "'");
             string Registered = "no";
             int rows = check.Count();
             if (rows != 0)
@@ -418,7 +418,7 @@ namespace ActiveSim
 
         private void CitnameUpdateReg(string Name, string Reg)
         {
-            foreach (DataRow dr in Globals.CitsInWorld.Rows)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
                 if (dr[0].ToString() == Name)
                 {
@@ -431,12 +431,12 @@ namespace ActiveSim
         private void CitnumUpdatePerm(string Citnum, string Perm)
         {
 
-            foreach (DataRow dr in Globals.CitsInWorld.Rows)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
                 if (dr[4].ToString() == Citnum)
                 {
                     dr[3] = Perm;
-                    //Console.WriteLine("I actually updated my perm status in the CitsInWorld after registering.");
+                    //Console.WriteLine("I actually updated my perm status in the CitTable after registering.");
                 }
             }
 
@@ -445,12 +445,12 @@ namespace ActiveSim
         private void CitnumUpdateReg(string Citnum, string Reg)
         {
 
-            foreach (DataRow dr in Globals.CitsInWorld.Rows)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
                 if (dr[4].ToString() == Citnum)
                 {
                     dr[2] = Reg;
-                    //Console.WriteLine("I actually updated my reg status in the CitsInWorld after registering.");
+                    //Console.WriteLine("I actually updated my reg status in the CitTable after registering.");
                 }
             }
 
@@ -458,7 +458,7 @@ namespace ActiveSim
 
         private bool CitnumIsInWorld(string Citnum)
         {
-            foreach (DataRow dr in Globals.CitsInWorld.Rows)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
                 if (dr[4].ToString() == Citnum)
                 {
@@ -471,7 +471,7 @@ namespace ActiveSim
 
 
 
-        //    DataRow[] check = Globals.CitsInWorld.Select("Name = '" + Name + "'");
+        //    DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
         //    int rows = check.Count();
         //    if (rows != 0)
         //    {
@@ -483,7 +483,7 @@ namespace ActiveSim
         private string CitGetCitnum(string Name)
         {
             string Citnum = "0";
-            foreach (DataRow dr in Globals.CitsInWorld.Rows)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
                 if (dr["Name"] == Name)
                 {
@@ -508,7 +508,7 @@ namespace ActiveSim
 
         private int CitGetSession(string Name)
         {
-            DataRow[] check = Globals.CitsInWorld.Select("Name = '" + Name + "'");
+            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
             int Sess = 0;
             int rows = check.Count();
             if (rows != 0)
@@ -523,7 +523,7 @@ namespace ActiveSim
 
         private string CitGetName(string Citnum)
         {
-            DataRow[] check = Globals.CitsInWorld.Select("Citnum = '" + Citnum + "'");
+            DataRow[] check = Globals.CitTable.Select("Citnum = '" + Citnum + "'");
             string Name = "Name";
             int rows = check.Count();
             if (rows != 0)

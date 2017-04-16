@@ -64,8 +64,8 @@ namespace ActiveSim
             public static string sPassword = "hidden";
             public static string sWorld = "simulator";
             public static int iXPos = 0;
-            public static int iYPos = 690;
-            public static int iZPos = 500;
+            public static int iYPos = 0;
+            public static int iZPos = 0;
             public static int iYaw = 0;
             public static int iAV = 1;
 
@@ -91,7 +91,7 @@ namespace ActiveSim
             public static DataTable CMDPermLevel = new DataTable();
 
             // Sim rules
-            public static string sCaptain = "";
+            public static string sCaptain = "318855";
 
             // SQLITE connection
             public static SQLiteConnection m_db;
