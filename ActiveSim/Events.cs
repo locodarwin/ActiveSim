@@ -138,16 +138,59 @@ namespace ActiveSim
 
         private void OnEventHUDClick(IInstance sender)
         {
-            var Sess = sender.Attributes.HudElementSession;
-            var id = sender.Attributes.HudElementId;
+            int Sess = sender.Attributes.HudElementSession;
+            int id = sender.Attributes.HudElementId;
             var x = sender.Attributes.HudElementClickX;
             var y = sender.Attributes.HudElementClickY;
             var z = sender.Attributes.HudElementClickZ;
 
-            
-            Stat(1, "HUD Click", "Simplayer session " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
-            Chat(1, "HUD Click", "Simplayer " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
-            _instance.Say("Simplayer " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".");
+
+            if (id == 1)
+            {
+                // Clicked inventory
+                ButtonInv(Sess);
+            }
+
+            if (id == 2)
+            {
+                Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Attack' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Attack' (to be developed)");
+            }
+
+            if (id == 3)
+            {
+                Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Settings' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Settings' (to be developed)");
+            }
+
+            if (id == 4)
+            {
+                Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Trade' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Trade' (to be developed)");
+            }
+
+            if (id == 5)
+            {
+                Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Extra1' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Extra BUtton1' (to be developed)");
+            }
+
+            if (id == 6)
+            {
+                Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Extra2' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Extra BUtton2' (to be developed)");
+            }
+
+            if (id == 7)
+            {
+                Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Extra3' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Extra BUtton3' (to be developed)");
+            }
+
+
+            //Stat(1, "HUD Click", "Simplayer session " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+            //Chat(1, "HUD Click", "Simplayer " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+            //_instance.Say("Simplayer " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".");
         }
 
     }

@@ -79,9 +79,10 @@ namespace ActiveSim
             public static string sCarryName = "pound";
             public static int iCarryCap = 0;
 
+            // Console colors (for RGB, switch places the first byte (i.e. ff) with last byte, so 0x336699 = 0x996633
+            public static int ColorInv, ColorPresentList, ColorRegList;
+
             // World user list
-            //public static List<string> CitList = new List<string>();
-            //public static List<string> SimplayerList = new List<string>();
             public static DataTable CitTable = new DataTable();
             
 
@@ -90,7 +91,7 @@ namespace ActiveSim
             public static DataTable CMDPermLevel = new DataTable();
 
             // Sim rules
-            public static string sCaptain = "361395";
+            public static string sCaptain = "";
 
             // SQLITE connection
             public static SQLiteConnection m_db;
@@ -251,17 +252,9 @@ namespace ActiveSim
             }
 
             aTimer.Stop();
-            
-            // Dispose of the API instance, reset all flags
-            _instance.HudDestroy(0, 1);
-            _instance.HudDestroy(0, 2);
-            _instance.HudDestroy(0, 3);
-            _instance.HudDestroy(0, 4);
-            _instance.HudDestroy(0, 5);
-            Utility.Wait(400);
-            
 
-            
+            // Dispose of the API instance, reset all flags
+            _instance.HudClear(0);
 
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
@@ -332,12 +325,7 @@ namespace ActiveSim
         // Form1 is closing; let's do a clean log out of the universe first
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _instance.HudDestroy(0, 1);
-            _instance.HudDestroy(0, 2);
-            _instance.HudDestroy(0, 3);
-            _instance.HudDestroy(0, 4);
-            _instance.HudDestroy(0, 5);
-
+            _instance.HudClear(0);
             _instance.Dispose();
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
