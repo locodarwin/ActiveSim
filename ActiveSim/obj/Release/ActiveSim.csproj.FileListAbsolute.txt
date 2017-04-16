@@ -23,3 +23,15 @@ C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Rel
 C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.exe.config
 C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.exe
 C:\Users\Shawn\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.pdb
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\aw.dll
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\activesim.db
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.exe.config
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.exe
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\bin\Release\ActiveSim.pdb
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.csprojResolveAssemblyReference.cache
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.Form1.resources
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.Form2.resources
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.Properties.Resources.resources
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.csproj.GenerateResource.Cache
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.exe
+C:\Users\solson\Documents\Visual Studio 2017\Projects\ActiveSim\ActiveSim\obj\Release\ActiveSim.pdb

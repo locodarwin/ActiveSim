@@ -62,26 +62,6 @@ namespace ActiveSim
             //Stat(1, "Test", cmd, "black");
         }
 
-        // Method to respond back on the results of the command
-        private void Response(int iSess, int iType, string sMsg)
-        {
-            if (iType == 2)
-            {
-                _instance.Whisper(iSess, sMsg);
-                Stat(1, "Response", "(whispered): " + sMsg, "blue");
-                Chat(1, Globals.sBotName, "(whispered): " + sMsg, "blue");
-            }
-            else
-            {
-                _instance.Say(sMsg);
-                Stat(1, "Response", sMsg, "black");
-                Chat(1, Globals.sBotName, sMsg, "black");
-            }
-
-        }
-
-        
-
         // Command VERSION
         private void DoVersion(string sName, int iType, int iSess, string[] cmd)
         {
@@ -274,7 +254,7 @@ namespace ActiveSim
             sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             sqlcmd.ExecuteNonQuery();
 
-            // Delete the HUD, and remove from CitTable
+            // Delete the HUD, and remove from CitsInWorld
             if (lCmd.Count == 2)
             {
                 // Get session of the other citizen
@@ -404,7 +384,7 @@ namespace ActiveSim
             List<string> Citnums = new List<string>();
             List<string> Registered = new List<string>();
             List<string> PermissionLevel = new List<string>();
-            foreach (DataRow dd in Globals.CitTable.Rows)
+            foreach (DataRow dd in Globals.CitsInWorld.Rows)
             {
                 Names.Add(dd.Field<string>(0));
                 Citnums.Add(dd.Field<string>(4));
@@ -600,7 +580,7 @@ namespace ActiveSim
                 }
             }
             reader.Close();
-
+            
 
         }
 
