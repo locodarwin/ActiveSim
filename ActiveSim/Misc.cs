@@ -150,7 +150,7 @@ namespace ActiveSim
             return bStat;
         }
 
-        private void ConsolePrint(int iSess, int color, bool bold, bool italics, string msg)
+        private void ConsolePrint(int iSess, AW.Color color, bool bold, bool italics, string msg)
         {
             _instance.Attributes.ConsoleColor = color;
             _instance.Attributes.ConsoleBold = bold;
@@ -166,10 +166,43 @@ namespace ActiveSim
 
         private void DrawHUD(int iSess)
         {
-            
+
+            _instance.Attributes.HudElementType = AW.HudType.Image;
+            _instance.Attributes.HudElementText = "/hud/inventory-yes.jpg";
+            _instance.Attributes.HudElementId = 1;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 0;
+            _instance.Attributes.HudElementY = -64;
+            _instance.Attributes.HudElementZ = 2;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 64;
+            _instance.Attributes.HudElementSizeY = 64;
+
+            _instance.HudCreate();
+
             _instance.Attributes.HudElementType = AW.HudType.Image;
             _instance.Attributes.HudElementText = "/hud/attack-yes.jpg";
-            _instance.Attributes.HudElementId = 1;
+            _instance.Attributes.HudElementId = 2;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 64;
+            _instance.Attributes.HudElementY = -64;
+            _instance.Attributes.HudElementZ = 2;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 64;
+            _instance.Attributes.HudElementSizeY = 64;
+
+            _instance.HudCreate();
+
+
+            _instance.Attributes.HudElementType = AW.HudType.Image;
+            _instance.Attributes.HudElementText = "/hud/settings.jpg";
+            _instance.Attributes.HudElementId = 3;
             _instance.Attributes.HudElementSession = iSess;
             _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
             _instance.Attributes.HudElementOpacity = 1.0f;
@@ -185,7 +218,7 @@ namespace ActiveSim
 
             _instance.Attributes.HudElementType = AW.HudType.Image;
             _instance.Attributes.HudElementText = "/hud/trade-yes.jpg";
-            _instance.Attributes.HudElementId = 2;
+            _instance.Attributes.HudElementId = 4;
             _instance.Attributes.HudElementSession = iSess;
             _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
             _instance.Attributes.HudElementOpacity = 1.0f;
@@ -202,7 +235,7 @@ namespace ActiveSim
 
             _instance.Attributes.HudElementType = AW.HudType.Image;
             _instance.Attributes.HudElementText = "/hud/ntdibut.jpg";
-            _instance.Attributes.HudElementId = 3;
+            _instance.Attributes.HudElementId = 5;
             _instance.Attributes.HudElementSession = iSess;
             _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
             _instance.Attributes.HudElementOpacity = 1.0f;
@@ -218,7 +251,7 @@ namespace ActiveSim
 
             _instance.Attributes.HudElementType = AW.HudType.Image;
             _instance.Attributes.HudElementText = "/hud/ntdibut.jpg";
-            _instance.Attributes.HudElementId = 4;
+            _instance.Attributes.HudElementId = 6;
             _instance.Attributes.HudElementSession = iSess;
             _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
             _instance.Attributes.HudElementOpacity = 1.0f;
@@ -234,7 +267,7 @@ namespace ActiveSim
 
             _instance.Attributes.HudElementType = AW.HudType.Image;
             _instance.Attributes.HudElementText = "/hud/ntdibut.jpg";
-            _instance.Attributes.HudElementId = 5;
+            _instance.Attributes.HudElementId = 7;
             _instance.Attributes.HudElementSession = iSess;
             _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
             _instance.Attributes.HudElementOpacity = 1.0f;
@@ -248,15 +281,45 @@ namespace ActiveSim
 
             _instance.HudCreate();
 
+
+            _instance.Attributes.HudElementType = AW.HudType.Image;
+            _instance.Attributes.HudElementText = "/hud/ntdibut.jpg";
+            _instance.Attributes.HudElementId = 8;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 0;
+            _instance.Attributes.HudElementY = -96;
+            _instance.Attributes.HudElementZ = 2;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 128;
+            _instance.Attributes.HudElementSizeY = 32;
+
+            _instance.HudCreate();
+
+            _instance.Attributes.HudElementType = AW.HudType.Text;
+            _instance.Attributes.HudElementText = "HUD";
+            _instance.Attributes.HudElementId = 9;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 0;
+            _instance.Attributes.HudElementY = -96;
+            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 128;
+            _instance.Attributes.HudElementSizeY = 32;
+
+            _instance.HudCreate();
+
+
         }
 
         private void EraseHUD(int iSess)
         {
-            _instance.HudDestroy(iSess, 1);
-            _instance.HudDestroy(iSess, 2);
-            _instance.HudDestroy(iSess, 3);
-            _instance.HudDestroy(iSess, 4);
-            _instance.HudDestroy(iSess, 5);
+            _instance.HudClear(iSess);
         }
 
         // Method to get citizen number
@@ -296,26 +359,26 @@ namespace ActiveSim
                     PermLevel = "Simplayer";  // default for registered Simplayers, in case for some reason not found in Permlevel Dictionary
                 }
             }
-            Globals.CitsInWorld.Rows.Add(Name, iSess, Registered, PermLevel, Citnum);
+            Globals.CitTable.Rows.Add(Name, iSess, Registered, PermLevel, Citnum);
             return Registered;
         }
 
         private void CitTableRemove(string Name)
         {
-            DataRow[] check = Globals.CitsInWorld.Select("Name = '" + Name + "'");
+            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
             int rows = check.Count();
             if (rows != 0)
             {
                 foreach (DataRow z in check)
                 {
-                    Globals.CitsInWorld.Rows.Remove(z);
+                    Globals.CitTable.Rows.Remove(z);
                 }
             }
         }
 
         private bool CitIsRegistered(string Name)
         {
-            DataRow[] check = Globals.CitsInWorld.Select("Name = '" + Name + "'");
+            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
             string Registered = "no";
             int rows = check.Count();
             if (rows != 0)
@@ -335,7 +398,7 @@ namespace ActiveSim
 
         private bool CitIsRegistered(int iCitnum)
         {
-            DataRow[] check = Globals.CitsInWorld.Select("Citnum = '" + iCitnum.ToString() + "'");
+            DataRow[] check = Globals.CitTable.Select("Citnum = '" + iCitnum.ToString() + "'");
             string Registered = "no";
             int rows = check.Count();
             if (rows != 0)
@@ -355,7 +418,7 @@ namespace ActiveSim
 
         private void CitnameUpdateReg(string Name, string Reg)
         {
-            foreach (DataRow dr in Globals.CitsInWorld.Rows)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
                 if (dr[0].ToString() == Name)
                 {
@@ -368,12 +431,12 @@ namespace ActiveSim
         private void CitnumUpdatePerm(string Citnum, string Perm)
         {
 
-            foreach (DataRow dr in Globals.CitsInWorld.Rows)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
                 if (dr[4].ToString() == Citnum)
                 {
                     dr[3] = Perm;
-                    //Console.WriteLine("I actually updated my perm status in the CitsInWorld after registering.");
+                    //Console.WriteLine("I actually updated my perm status in the CitTable after registering.");
                 }
             }
 
@@ -382,12 +445,12 @@ namespace ActiveSim
         private void CitnumUpdateReg(string Citnum, string Reg)
         {
 
-            foreach (DataRow dr in Globals.CitsInWorld.Rows)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
                 if (dr[4].ToString() == Citnum)
                 {
                     dr[2] = Reg;
-                    //Console.WriteLine("I actually updated my reg status in the CitsInWorld after registering.");
+                    //Console.WriteLine("I actually updated my reg status in the CitTable after registering.");
                 }
             }
 
@@ -395,7 +458,7 @@ namespace ActiveSim
 
         private bool CitnumIsInWorld(string Citnum)
         {
-            foreach (DataRow dr in Globals.CitsInWorld.Rows)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
                 if (dr[4].ToString() == Citnum)
                 {
@@ -408,7 +471,7 @@ namespace ActiveSim
 
 
 
-        //    DataRow[] check = Globals.CitsInWorld.Select("Name = '" + Name + "'");
+        //    DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
         //    int rows = check.Count();
         //    if (rows != 0)
         //    {
@@ -420,7 +483,7 @@ namespace ActiveSim
         private string CitGetCitnum(string Name)
         {
             string Citnum = "0";
-            foreach (DataRow dr in Globals.CitsInWorld.Rows)
+            foreach (DataRow dr in Globals.CitTable.Rows)
             {
                 if (dr["Name"] == Name)
                 {
@@ -428,12 +491,24 @@ namespace ActiveSim
                 }
             }
             return Citnum;
+        }
 
+        private int CitGetCitnum(int Sess)
+        {
+            int Citnum = 0;
+            foreach (DataRow dr in Globals.CitTable.Rows)
+            {
+                if (Convert.ToInt32(dr["Session"]) == Sess)
+                {
+                    Citnum = Convert.ToInt32(dr["Citnum"]);
+                }
+            }
+            return Citnum;
         }
 
         private int CitGetSession(string Name)
         {
-            DataRow[] check = Globals.CitsInWorld.Select("Name = '" + Name + "'");
+            DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
             int Sess = 0;
             int rows = check.Count();
             if (rows != 0)
@@ -448,14 +523,14 @@ namespace ActiveSim
 
         private string CitGetName(string Citnum)
         {
-            DataRow[] check = Globals.CitsInWorld.Select("Citnum = '" + Citnum + "'");
+            DataRow[] check = Globals.CitTable.Select("Citnum = '" + Citnum + "'");
             string Name = "Name";
             int rows = check.Count();
             if (rows != 0)
             {
                 foreach (DataRow z in check)
                 {
-                    Name = z.Field<string>(4);
+                    Name = z.Field<string>(0);
                 }
             }
             return Name;

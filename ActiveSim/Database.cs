@@ -47,6 +47,18 @@ namespace ActiveSim
             {
                 Globals.sCaptain = temp;
             }
+            if (dict.TryGetValue("ColorInv", out temp))
+            {
+                Globals.ColorInv = Convert.ToInt32(temp, 16);
+            }
+            if (dict.TryGetValue("ColorPresentList", out temp))
+            {
+                Globals.ColorPresentList = Convert.ToInt32(temp, 16);
+            }
+            if (dict.TryGetValue("ColorRegList", out temp))
+            {
+                Globals.ColorRegList = Convert.ToInt32(temp, 16);
+            }
 
 
         }

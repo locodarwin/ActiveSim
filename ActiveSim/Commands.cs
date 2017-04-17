@@ -254,7 +254,7 @@ namespace ActiveSim
             sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             sqlcmd.ExecuteNonQuery();
 
-            // Delete the HUD, and remove from CitsInWorld
+            // Delete the HUD, and remove from CitTable
             if (lCmd.Count == 2)
             {
                 // Get session of the other citizen
@@ -304,20 +304,12 @@ namespace ActiveSim
 
             if (cmd[1] == "stop")
             {
-                _instance.HudDestroy(iSess, 1);
-                _instance.HudDestroy(iSess, 2);
-                _instance.HudDestroy(iSess, 3);
-                _instance.HudDestroy(iSess, 4);
-                _instance.HudDestroy(iSess, 5);
+                EraseHUD(iSess);
             }
 
             if (cmd[1] == "eraseall")
             {
-                _instance.HudDestroy(0, 1);
-                _instance.HudDestroy(0, 2);
-                _instance.HudDestroy(0, 3);
-                _instance.HudDestroy(0, 4);
-                _instance.HudDestroy(0, 5);
+                EraseHUD(0);
             }
 
 
@@ -378,6 +370,7 @@ namespace ActiveSim
         {
             int iCitnum = GetCitnum(sName);
             Stat(1, "CMD", "Command: present (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
+            Chat(1, "Bot", "The Captain is " + Globals.sCaptain, "black"); 
 
             // Check permissions
             if (CheckPerms(iCitnum, cmd[0]) == false)
@@ -391,7 +384,7 @@ namespace ActiveSim
             List<string> Citnums = new List<string>();
             List<string> Registered = new List<string>();
             List<string> PermissionLevel = new List<string>();
-            foreach (DataRow dd in Globals.CitsInWorld.Rows)
+            foreach (DataRow dd in Globals.CitTable.Rows)
             {
                 Names.Add(dd.Field<string>(0));
                 Citnums.Add(dd.Field<string>(4));
@@ -410,7 +403,7 @@ namespace ActiveSim
                 {
                     q = q + "Not registered";
                 }
-                ConsolePrint(iSess, 0x990000, false, false, q);
+                ConsolePrint(iSess, Globals.ColorPresentList, false, false, q);
                 i = i + 1;
             }
 
@@ -458,7 +451,7 @@ namespace ActiveSim
                     sOut = sOut + num + ") -- ";
                     sOut = sOut + GetPermLevel(num);
 
-                    ConsolePrint(iSess, 0x009999, false, false, sOut);
+                    ConsolePrint(iSess, Globals.ColorRegList, false, false, sOut);
 
                     //Response(iSess, iType, "There ARE registered citizens in this Sim.");
                 }
@@ -567,7 +560,7 @@ namespace ActiveSim
             if (reader.HasRows == false)
             {
                 // We've got no rows returned! Respond back with this fact and don't do anything else
-                ConsolePrint(iSess, 0x009999, false, false, "No items in inventory.");
+                ConsolePrint(iSess, Globals.ColorInv, true, false, "Inventory\tNo items in inventory.");
             }
             else
             {
@@ -582,9 +575,8 @@ namespace ActiveSim
 
                     string sOut = item + " [v: " + value + "] [w: " + weight + "] [t: " + type + "]";
 
-                    ConsolePrint(iSess, 0x990000, true, false, sOut);
+                    ConsolePrint(iSess, Globals.ColorInv, true, false, "Inventory\t" + sOut);
 
-                    //Response(iSess, iType, "There ARE registered citizens in this Sim.");
                 }
             }
             reader.Close();
