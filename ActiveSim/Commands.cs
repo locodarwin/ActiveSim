@@ -492,7 +492,7 @@ namespace ActiveSim
             }
 
             // Give to citnum
-            bool rc = AddAssetToInv(rCitnum, Convert.ToInt32(cmd[2]), cmd[3]);
+            bool rc = AddAssetToInv(rCitnum, Convert.ToInt32(cmd[2]), cmd[3], 4);
             if (rc == true)
             {
                 Response(iSess, iType, "AssetNum " + cmd[2] + " of type " + cmd[3] + " given to " + cmd[1]);

@@ -47,6 +47,8 @@ namespace ActiveSim
             Stat(1, "Startup", Globals.sAppName + " " + Globals.sVersion + " - " + Globals.sByline + ".", "black");
             Stat(1, "Startup", "Bot started and ready to log in.", "black");
 
+            this.FormClosing += Form1_Closing;
+
         }
 
         // Class for the public global variables
@@ -81,6 +83,9 @@ namespace ActiveSim
 
             // Console colors (for RGB, switch places the first byte (i.e. ff) with last byte, so 0x336699 = 0x996633
             public static int ColorInv, ColorPresentList, ColorRegList;
+
+            // Generic counters
+            public static int iCount;
 
             // World user list
             public static DataTable CitTable = new DataTable();
@@ -297,6 +302,9 @@ namespace ActiveSim
             // Load Sim Data
             SimDataLoad();
 
+            // Create and load item lookup table in database
+            ItemTableLoad();
+
             // Load permissions dictionaries
             LoadPerms();
             Globals.iSimRun = true;
@@ -308,6 +316,9 @@ namespace ActiveSim
             butSimStart.Enabled = true;
             butSimConfig.Enabled = true;
             butSimStop.Enabled = false;
+
+            // turn off HUD
+            _instance.HudClear(0);
 
             Stat(1, "Sim Stop", "Stopped Active Simulator profile '" + Globals.sSimProfile + "'", "black");
             Globals.iSimRun = false;
@@ -325,11 +336,12 @@ namespace ActiveSim
         // Form1 is closing; let's do a clean log out of the universe first
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            // turn off HUD
             _instance.HudClear(0);
-            _instance.Dispose();
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.m_db.Close();
+            _instance.Dispose();
         }
 
         private void Chat(int icon, string speaker, string message, string color)
