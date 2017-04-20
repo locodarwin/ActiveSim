@@ -10,10 +10,10 @@ namespace ActiveSim
     public partial class Form1
     {
 
-        private bool AddAssetToInv(int iCitnum, int iAssetnum, string sType, int iQuantity)
+        private bool AddAssetToInv(int iCitnum, int iAssetnum, int iQuantity)
         {
             
-            string sql = "select * from Item_" + sType + " where AssetNum = '" + iAssetnum.ToString() + "' and SimProfile = '" + Globals.sSimProfile + "'";
+            string sql = "select * from Items where AssetNum = '" + iAssetnum.ToString() + "'";
             SQLiteCommand sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
             SQLiteDataReader reader = sqlcmd.ExecuteReader();
 
@@ -21,19 +21,21 @@ namespace ActiveSim
             if (reader.HasRows == false)
             {
                 // We've got no rows returned! Respond back with this fact and don't add anything.
-                Stat(1, "AddInv", "Asset " + iAssetnum + " was not found in table Item_" + sType, "red");
+                Stat(1, "AddInv", "Asset " + iAssetnum + " was not found in the database.", "red");
                 return false;
             }
 
             double Value = 0;
             double Weight = 0;
             string Name = "";
+            string sType = "";
 
             while (reader.Read())
             {
                 Name = reader["Name"].ToString();
                 Value = Convert.ToDouble(reader["Value"]);
                 Weight = Convert.ToDouble(reader["Weight"]);
+                sType = reader["Type"].ToString();
 
             }
             reader.Close();
@@ -57,7 +59,7 @@ namespace ActiveSim
                 reader.Close();
 
                 iQuantity = iQuantity + Globals.iCount;
-                sql = "UPDATE UserInventory SET Quantity = '" + iQuantity + "' where SimProfile = '" + Globals.sSimProfile + " and AssetNum = '" + 
+                sql = "UPDATE UserInventory SET Quantity = '" + iQuantity + "' where SimProfile = '" + Globals.sSimProfile + "' and AssetNum = '" + 
                     iAssetnum.ToString() + "' and Citnum = '" + iCitnum + "'";
                 sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
                 sqlcmd.ExecuteNonQuery();

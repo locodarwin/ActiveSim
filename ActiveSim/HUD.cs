@@ -63,7 +63,7 @@ namespace ActiveSim
             _instance.HudCreate();
 
             _instance.Attributes.HudElementType = AW.HudType.Image;
-            _instance.Attributes.HudElementText = "/hud/trade-yes.jpg";
+            _instance.Attributes.HudElementText = "/hud/plant-yes.jpg";
             _instance.Attributes.HudElementId = 4;
             _instance.Attributes.HudElementSession = iSess;
             _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
@@ -71,7 +71,7 @@ namespace ActiveSim
             _instance.Attributes.HudElementX = 64;
             _instance.Attributes.HudElementY = 0;
             _instance.Attributes.HudElementZ = 2;
-            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks|AW.HudElementFlag.Highlight;
             _instance.Attributes.HudElementColor = 0xFFFFFF;
             _instance.Attributes.HudElementSizeX = 64;
             _instance.Attributes.HudElementSizeY = 64;
@@ -190,6 +190,9 @@ namespace ActiveSim
             else
             {
                 // Yes, there is inventory - display it
+                string dOut = "Inventory:\tName\t\t\tValue\tWt\tType\t\tQuantity";
+                ConsolePrint(iSess, Globals.ColorInv, true, false, dOut);
+
                 while (reader.Read())
                 {
 
@@ -197,10 +200,12 @@ namespace ActiveSim
                     string value = reader["Value"].ToString();
                     string weight = reader["Weight"].ToString();
                     string type = reader["Type"].ToString();
+                    string quantity = reader["Quantity"].ToString();
 
-                    string sOut = item + " [v: " + value + "] [w: " + weight + "] [t: " + type + "]";
+                    //string sOut = item + " \t[v: " + value + "] \t[w: " + weight + "] \t[t: " + type + "] \t[q: " + quantity + "]";
+                    string sOut = item + "\t\t" + value + "\t" + weight + "\t" + type + "\t\t" + quantity;
 
-                    ConsolePrint(iSess, Globals.ColorInv, true, false, "Inventory:\t" + sOut);
+                    ConsolePrint(iSess, Globals.ColorInv, false, false, "\t" + sOut);
 
                 }
             }

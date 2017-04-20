@@ -291,37 +291,14 @@ namespace ActiveSim
 
         private void butSimStart_Click(object sender, EventArgs e)
         {
-            // Disabled the buttons for this and sim config, enable the button for "stop sim"
-            butSimStart.Enabled = false;
-            butSimConfig.Enabled = false;
-            butSimStop.Enabled = true;
-
-
-            Stat(1, "Sim Start", "Started Active Simulator profile '" + Globals.sSimProfile + "'", "black");
-
-            // Load Sim Data
-            SimDataLoad();
-
-            // Create and load item lookup table in database
-            ItemTableLoad();
-
-            // Load permissions dictionaries
-            LoadPerms();
-            Globals.iSimRun = true;
+            // Call StartSim()
+            SimStart();
         }
 
         private void butSimStop_Click(object sender, EventArgs e)
         {
-            // Disabled the buttons for this and enable sim config & start sim
-            butSimStart.Enabled = true;
-            butSimConfig.Enabled = true;
-            butSimStop.Enabled = false;
-
-            // turn off HUD
-            _instance.HudClear(0);
-
-            Stat(1, "Sim Stop", "Stopped Active Simulator profile '" + Globals.sSimProfile + "'", "black");
-            Globals.iSimRun = false;
+            // Call StopSim();
+            SimStop();
         }
 
         // timer function for the AW Wait function

@@ -67,7 +67,6 @@ namespace ActiveSim
                 return;
             }
 
-
             // If the entity is already in the CitTable, remove
             DataRow[] check = Globals.CitTable.Select("Name = '" + Name + "'");
             int rows = check.Count();
@@ -79,22 +78,24 @@ namespace ActiveSim
                 }
             }
 
-            
-
             // Add to the CitTable, return whether or not is registered
             string Registered = CitTableAdd(Name, Sess, Citnum);
 
             // Log the event in the status window, and draw HUD if the citizen is registered
+
+            // Check to see if registered - if so, and Sim is started, draw HUD
             if (Registered == "yes")
             {
                 Stat(1, "Simplayer Enters", "Registered Simplayer " + Name + " has joined the world.", "blue");
-                DrawHUD(sender.Attributes.AvatarSession);
+                if (Globals.iSimRun == true)
+                {
+                    DrawHUD(sender.Attributes.AvatarSession);
+                }
             }
             else
             {
                 Stat(1, "Citizen Enters", "Non-Simplayer " + Name + " has joined the world.", "blue");
             }
-
 
             // If Captain, announce entry
             if (Citnum == Globals.sCaptain)
@@ -165,8 +166,8 @@ namespace ActiveSim
 
             if (id == 4)
             {
-                Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Trade' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
-                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Trade' (to be developed)");
+                Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Plant' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Plant' (to be developed)");
             }
 
             if (id == 5)
