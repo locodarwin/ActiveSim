@@ -47,6 +47,8 @@ namespace ActiveSim
             Stat(1, "Startup", Globals.sAppName + " " + Globals.sVersion + " - " + Globals.sByline + ".", "black");
             Stat(1, "Startup", "Bot started and ready to log in.", "black");
 
+            this.FormClosing += Form1_Closing;
+
         }
 
         // Class for the public global variables
@@ -81,6 +83,9 @@ namespace ActiveSim
 
             // Console colors (for RGB, switch places the first byte (i.e. ff) with last byte, so 0x336699 = 0x996633
             public static int ColorInv, ColorPresentList, ColorRegList;
+
+            // Generic counters
+            public static int iCount;
 
             // World user list
             public static DataTable CitTable = new DataTable();
@@ -286,31 +291,14 @@ namespace ActiveSim
 
         private void butSimStart_Click(object sender, EventArgs e)
         {
-            // Disabled the buttons for this and sim config, enable the button for "stop sim"
-            butSimStart.Enabled = false;
-            butSimConfig.Enabled = false;
-            butSimStop.Enabled = true;
-
-
-            Stat(1, "Sim Start", "Started Active Simulator profile '" + Globals.sSimProfile + "'", "black");
-
-            // Load Sim Data
-            SimDataLoad();
-
-            // Load permissions dictionaries
-            LoadPerms();
-            Globals.iSimRun = true;
+            // Call StartSim()
+            SimStart();
         }
 
         private void butSimStop_Click(object sender, EventArgs e)
         {
-            // Disabled the buttons for this and enable sim config & start sim
-            butSimStart.Enabled = true;
-            butSimConfig.Enabled = true;
-            butSimStop.Enabled = false;
-
-            Stat(1, "Sim Stop", "Stopped Active Simulator profile '" + Globals.sSimProfile + "'", "black");
-            Globals.iSimRun = false;
+            // Call StopSim();
+            SimStop();
         }
 
         // timer function for the AW Wait function
@@ -325,11 +313,12 @@ namespace ActiveSim
         // Form1 is closing; let's do a clean log out of the universe first
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            // turn off HUD
             _instance.HudClear(0);
-            _instance.Dispose();
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.m_db.Close();
+            _instance.Dispose();
         }
 
         private void Chat(int icon, string speaker, string message, string color)

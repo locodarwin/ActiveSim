@@ -60,7 +60,71 @@ namespace ActiveSim
                 Globals.ColorRegList = Convert.ToInt32(temp, 16);
             }
 
+           
+        }
 
+        // ItemTableLoad to load the full set of items into a new table for item lookup
+        private void ItemTableLoad()
+        {
+
+            string sql;
+            SQLiteCommand sqlcmd;
+            try
+            {
+                // Drop table if it already exists
+                sql = "DROP TABLE Items";
+                sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+                sqlcmd.ExecuteNonQuery();
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            // Create table
+            sql = "CREATE TABLE Items(AssetNum INTEGER, Name TEXT, Value INTEGER, Weight INTEGER, Type TEXT)";
+            sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            sqlcmd.ExecuteNonQuery();
+
+
+            // Load all other tables into the item table (for the current sim)
+            sql = "select * from Item_Seeds where SimProfile = '" + Globals.sSimProfile + "'";
+            sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            SQLiteDataReader reader = sqlcmd.ExecuteReader();
+            ItemLoader(reader, "Seeds");
+            reader.Close();
+
+            sql = "select * from Item_Produce where SimProfile = '" + Globals.sSimProfile + "'";
+            sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            reader = sqlcmd.ExecuteReader();
+            ItemLoader(reader, "Produce");
+            reader.Close();
+
+
+        }
+
+        private void ItemLoader(SQLiteDataReader reader, string Type)
+        {
+            // Any items in the reader?
+            if (reader.HasRows == false)
+            {
+                return;
+            }
+
+            string AssetNum, Name, Value, Weight;
+
+            while (reader.Read())
+            {
+                AssetNum = reader["AssetNum"].ToString();
+                Name = reader["Name"].ToString();
+                Value = reader["Value"].ToString();
+                Weight = reader["Weight"].ToString();
+
+                string sql = "INSERT INTO Items VALUES ('" + AssetNum + "', '" + Name + "', '" + Value + "', '" + Weight + "', '" + Type + "')";
+                SQLiteCommand sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+                sqlcmd.ExecuteNonQuery();
+            }
+            reader.Close();
         }
 
 

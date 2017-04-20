@@ -332,17 +332,8 @@ namespace ActiveSim
 
             if (cmd[1] == "start")
             {
-                // Disabled the buttons for this and sim config, enable the button for "stop sim"
-                butSimStart.Enabled = false;
-                butSimConfig.Enabled = false;
-                butSimStop.Enabled = true;
-
-                // Load Sim Data
-                SimDataLoad();
-
-                // Load permissions dictionaries
-                LoadPerms();
-                Globals.iSimRun = true;
+                // Call SimStart()
+                SimStart();
 
                 // Respond command complete
                 Stat(1, "Sim Start", "Started Active Simulator profile '" + Globals.sSimProfile + "'", "black");
@@ -351,12 +342,8 @@ namespace ActiveSim
             }
             if (cmd[1] == "stop")
             {
-                // Disabled the buttons for this and enable sim config & start sim
-                butSimStart.Enabled = true;
-                butSimConfig.Enabled = true;
-                butSimStop.Enabled = false;
-
-                Globals.iSimRun = false;
+                // Call SimStop()
+                SimStop();
 
                 // Respond command complete
                 Stat(1, "Sim Stop", "Stopped Active Simulator profile '" + Globals.sSimProfile + "'", "black");
@@ -415,7 +402,6 @@ namespace ActiveSim
             ConsolePrint(iSess, 0x009999, true, false, "Testing:\tThis is a test message.");
         }
 
-
         // Command SIMPLAYERS
         private void DoSimplayers(string sName, int iType, int iSess, string[] cmd)
         {
@@ -460,7 +446,6 @@ namespace ActiveSim
             
         }
 
-
         // DoGive /give [citname] [assetnum] [type]
         private void DoGive(string sName, int iType, int iSess, string[] cmd)
         {
@@ -478,7 +463,22 @@ namespace ActiveSim
             // Make sure the command has the right number of parameters
             if (cmd.Length != 4)
             {
-                Response(iSess, iType, "Error: wrong number of parameters. Usage: /give [citname] [assetnum] [type]");
+                Response(iSess, iType, "Error: wrong number of parameters. Usage: /give [citname] [assetnum] [quantity]");
+                return;
+            }
+
+            try
+            {
+                int bound = Convert.ToInt32(cmd[3]);
+                if (bound < 1)
+                {
+                    Response(iSess, iType, "Failed: AssetNum " + cmd[2] + ", quantity " + cmd[3] + ", was not given to " + cmd[1]);
+                    return;
+                }
+            }
+            catch
+            {
+                Response(iSess, iType, "Failed: AssetNum " + cmd[2] + ", quantity " + cmd[3] + ", was not given to " + cmd[1]);
                 return;
             }
 
@@ -492,14 +492,21 @@ namespace ActiveSim
             }
 
             // Give to citnum
-            bool rc = AddAssetToInv(rCitnum, Convert.ToInt32(cmd[2]), cmd[3]);
-            if (rc == true)
+            try
             {
-                Response(iSess, iType, "AssetNum " + cmd[2] + " of type " + cmd[3] + " given to " + cmd[1]);
+                bool rc = AddAssetToInv(rCitnum, Convert.ToInt32(cmd[2]), Convert.ToInt32(cmd[3]));
+                if (rc == true)
+                {
+                    Response(iSess, iType, "Assetnum " + cmd[2] + ", quantity " + cmd[3] + ", given to " + cmd[1]);
+                }
+                else
+                {
+                    Response(iSess, iType, "Failed: AssetNum " + cmd[2] + ", quantity " + cmd[3] + ", was not given to " + cmd[1]);
+                }
             }
-            else
+            catch
             {
-                Response(iSess, iType, "Failed: AssetNum " + cmd[2] + " of type " + cmd[3] + " was not given to " + cmd[1]);
+                Response(iSess, iType, "Failed: AssetNum " + cmd[2] + ", quantity " + cmd[3] + ", was not given to " + cmd[1]);
             }
 
         }
@@ -532,7 +539,7 @@ namespace ActiveSim
                     // check to see if the citnum is real or not
                     if (iCitnum == 0)
                     {
-                        Response(iSess, iType, "Error: '" + cmd[1] + "' is not a valid citizen.");
+                        Response(iSess, iType, "Error: '" + cmd[1] + "' (" + iCitnum.ToString() + ") is not a valid citizen.");
                         return;
                     }
                 }
@@ -565,6 +572,9 @@ namespace ActiveSim
             else
             {
                 // Yes, there is inventory - display it
+                string dOut = "Inventory:\tName\t\t\tValue\tWt\tType\t\tQuantity";
+                ConsolePrint(iSess, Globals.ColorInv, true, false, dOut);
+
                 while (reader.Read())
                 {
 
@@ -572,10 +582,12 @@ namespace ActiveSim
                     string value = reader["Value"].ToString();
                     string weight = reader["Weight"].ToString();
                     string type = reader["Type"].ToString();
+                    string quantity = reader["Quantity"].ToString();
 
-                    string sOut = item + " [v: " + value + "] [w: " + weight + "] [t: " + type + "]";
+                    //string sOut = item + " \t[v: " + value + "] \t[w: " + weight + "] \t[t: " + type + "] \t[q: " + quantity + "]";
+                    string sOut = item + "\t\t" + value + "\t" + weight + "\t" + type + "\t\t" + quantity;
 
-                    ConsolePrint(iSess, Globals.ColorInv, true, false, "Inventory\t" + sOut);
+                    ConsolePrint(iSess, Globals.ColorInv, false, false, "\t" + sOut);
 
                 }
             }
