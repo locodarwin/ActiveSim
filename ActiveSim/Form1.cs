@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AW;
 using System.Data.SQLite;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace ActiveSim
 {
@@ -13,6 +14,9 @@ namespace ActiveSim
         // Timer identifiers created out here in public
         public static IInstance _instance;
         public Timer aTimer;
+
+        // Delegates
+        public delegate void StatDelegate();
 
         public Form1()
         {
@@ -80,6 +84,11 @@ namespace ActiveSim
             public static int iCurrency = 0;
             public static string sCarryName = "pound";
             public static int iCarryCap = 0;
+
+            // This is a test of multithreading the "Stat" status update feature
+            //(int icon, string action, string message, string color)
+            public static int StatIcon;
+            public static string StatAction, StatMessage, StatColor;
 
             // Console colors (for RGB, switch places the first byte (i.e. ff) with last byte, so 0x336699 = 0x996633
             public static int ColorInv, ColorPresentList, ColorRegList;
@@ -161,7 +170,7 @@ namespace ActiveSim
             }
             else
             {
-                Stat(1, "Universe Login", "Universe entry successful.", "black");
+                Stat(1, "Universe Login", "Universe entry successful. (" + rc + ")", "black");
                 Globals.iInUniv = true;
                 butLoginWorld.Enabled = true;
                 butLogOut.Enabled = true;
@@ -204,10 +213,13 @@ namespace ActiveSim
             butLoginWorld.Enabled = false;
             butLogOut.Enabled = false;
 
+            // Prepare caretakermode
+            _instance.Attributes.EnterGlobal = true;
+
             // Enter world
             Stat(1, "World Login", "Logging into world " + Globals.sWorld + ".", "black");
             var rc = _instance.Enter(Globals.sWorld);
-            _instance.Attributes.ServerCaretakers = _instance.Attributes.LoginName.ToString();
+            
             if (rc != Result.Success)
             {
                 Stat(1, "Error", "Failed to log into world " + Globals.sWorld + " (reason:" + rc + ").", "red");
@@ -347,19 +359,62 @@ namespace ActiveSim
 
         private void Stat(int icon, string action, string message, string color)
         {
+
+            Globals.StatIcon = icon;
+            Globals.StatAction = action;
+            Globals.StatMessage = message;
+            Globals.StatColor = color;
+
+            if (ControlInvokeRequired(StatMon, () => ExecStat())) return;
+
             DateTime now = DateTime.Now;
             string dt = String.Format("{0:M/d/yyyy - HH:mm:ss}", now);
             ListViewItem item = new ListViewItem(dt, 0);
             item.UseItemStyleForSubItems = false;
-            item.SubItems.Add(action);
-            item.SubItems.Add(message);
+            item.SubItems.Add(Globals.StatAction);
+            item.SubItems.Add(Globals.StatMessage);
 
             item.SubItems[1].Font = new System.Drawing.Font(ChatMon.Font, System.Drawing.FontStyle.Bold);
-            item.SubItems[1].ForeColor = System.Drawing.Color.FromName(color);
-            item.SubItems[2].ForeColor = System.Drawing.Color.FromName(color);
+            item.SubItems[1].ForeColor = System.Drawing.Color.FromName(Globals.StatColor);
+            item.SubItems[2].ForeColor = System.Drawing.Color.FromName(Globals.StatColor);
+
             StatMon.Items.Add(item);
             StatMon.EnsureVisible(StatMon.Items.Count - 1);
+            Console.WriteLine("I'm NOT in the threadpool, fool!");
 
+        }
+
+        private void ExecStat()
+        {
+            DateTime now = DateTime.Now;
+            string dt = String.Format("{0:M/d/yyyy - HH:mm:ss}", now);
+            ListViewItem item = new ListViewItem(dt, 0);
+            item.UseItemStyleForSubItems = false;
+            item.SubItems.Add(Globals.StatAction);
+            item.SubItems.Add(Globals.StatMessage);
+
+            item.SubItems[1].Font = new System.Drawing.Font(ChatMon.Font, System.Drawing.FontStyle.Bold);
+            item.SubItems[1].ForeColor = System.Drawing.Color.FromName(Globals.StatColor);
+            item.SubItems[2].ForeColor = System.Drawing.Color.FromName(Globals.StatColor);
+
+            StatMon.Items.Add(item);
+            StatMon.EnsureVisible(StatMon.Items.Count - 1);
+            //Console.WriteLine("I'm in the threadpool, fool!");
+        }
+
+        /// <summary>
+        /// Helper method to determin if invoke required, if so will rerun method on correct thread.
+        /// if not do nothing.
+        /// </summary>
+        /// <param name="c">Control that might require invoking</param>
+        /// <param name="a">action to preform on control thread if so.</param>
+        /// <returns>true if invoke required</returns>
+        public bool ControlInvokeRequired(Control c, Action a)
+        {
+            if (c.InvokeRequired) c.Invoke(new MethodInvoker(delegate { a(); }));
+            else return false;
+
+            return true;
         }
 
 
