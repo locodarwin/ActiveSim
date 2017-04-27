@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AW;
 using System.Data.SQLite;
 using System.Data;
+using System.Timers;
 using System.Threading.Tasks;
 
 namespace ActiveSim
@@ -13,7 +14,8 @@ namespace ActiveSim
 
         // Timer identifiers created out here in public
         public static IInstance _instance;
-        public Timer aTimer;
+        public System.Windows.Forms.Timer aTimer;
+        public System.Timers.Timer aCadence;
 
         // Delegates
         public delegate void StatDelegate();
@@ -78,6 +80,7 @@ namespace ActiveSim
             public static bool iInUniv = false;
             public static bool iInWorld = false;
             public static bool iSimRun = false;
+            public static bool iCadenceOn = false;
 
             public static string sSimProfile = "Default";
             public static string sCurrencyName = "gold";
@@ -117,11 +120,11 @@ namespace ActiveSim
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            // Initialize and start the timer
-            aTimer = new Timer();
+            // Initialize and start the  AWSDK timer
+            aTimer = new System.Windows.Forms.Timer();
             aTimer.Tick += new EventHandler(aTimer_Tick);
             aTimer.Interval = 100;
-            aTimer.Start();
+            //aTimer.Start();
 
         }
 
@@ -153,6 +156,7 @@ namespace ActiveSim
             _instance.EventAvatarDelete += OnEventAvatarDelete;
             _instance.EventChat += OnEventChat;
             _instance.EventHudClick += OnEventHUDClick;
+            _instance.EventObjectClick += OnEventObjectClick;
 
             // Set universe login parameters
             _instance.Attributes.LoginName = Globals.sBotName;
@@ -186,7 +190,7 @@ namespace ActiveSim
             Globals.CitTable.Columns.Add("Citnum", typeof(string));
 
             // Initialize and start the timer
-            aTimer = new Timer();
+            aTimer = new System.Windows.Forms.Timer();
             aTimer.Tick += new EventHandler(aTimer_Tick);
             aTimer.Interval = 100;
             aTimer.Start();
@@ -268,11 +272,22 @@ namespace ActiveSim
                 return;
             }
 
+            // Turn off & kill timer (if it's on)
             aTimer.Stop();
+
+            // Turn off & kill Cadence (if running)
+            if (Globals.iCadenceOn == true)
+            {
+                aCadence.Stop();
+                Stat(1, "Cadence", "Cadence turned off", "black");
+                Globals.iCadenceOn = false;
+            }
+            
 
             // Dispose of the API instance, reset all flags
             _instance.HudClear(0);
-
+            _instance.Dispose();
+            Utility.Wait(0);
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.iInWorld = false;
@@ -289,7 +304,8 @@ namespace ActiveSim
             butSimStatus.Enabled = false;
             butSimStop.Enabled = false;
 
-            _instance.Dispose();
+            
+
         }
 
         private void butSendChat_Click(object sender, EventArgs e)
@@ -325,12 +341,23 @@ namespace ActiveSim
         // Form1 is closing; let's do a clean log out of the universe first
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+
+            // Turn off & kill Cadence (if running)
+            if (Globals.iCadenceOn == true)
+            {
+                aCadence.Stop();
+                Stat(1, "Cadence", "Cadence turned off", "black");
+                Globals.iCadenceOn = false;
+            }
+
             // turn off HUD
             _instance.HudClear(0);
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.m_db.Close();
             _instance.Dispose();
+            Utility.Wait(0);
+
         }
 
         private void Chat(int icon, string speaker, string message, string color)
@@ -380,7 +407,7 @@ namespace ActiveSim
 
             StatMon.Items.Add(item);
             StatMon.EnsureVisible(StatMon.Items.Count - 1);
-            Console.WriteLine("I'm NOT in the threadpool, fool!");
+            //Console.WriteLine("I'm NOT in the threadpool, fool!");
 
         }
 

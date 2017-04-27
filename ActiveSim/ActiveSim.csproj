@@ -55,6 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cadence.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="HUD.cs">
       <SubType>Form</SubType>
     </Compile>
