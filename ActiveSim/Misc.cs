@@ -87,6 +87,16 @@ namespace ActiveSim
 
             // Load permissions dictionaries
             LoadPerms();
+
+            // Start Cadence
+            aCadence = new System.Timers.Timer();
+            aCadence.Elapsed += new System.Timers.ElapsedEventHandler(Cadence);
+            aCadence.Interval = 60000;
+            aCadence.Start();
+            Stat(1, "Cadence", "Cadence turned on - interval 1 minute", "black");
+            Globals.iCadenceOn = true;
+
+            // Set SimRun flag
             Globals.iSimRun = true;
         }
 
@@ -99,6 +109,14 @@ namespace ActiveSim
 
             // turn off HUD
             _instance.HudClear(0);
+
+            // Turn off & kill Cadence (if running)
+            if (Globals.iCadenceOn == true)
+            {
+                aCadence.Stop();
+                Stat(1, "Cadence", "Cadence turned off", "black");
+                Globals.iCadenceOn = false;
+            }
 
             Stat(1, "Sim Stop", "Stopped Active Simulator profile '" + Globals.sSimProfile + "'", "black");
             Globals.iSimRun = false;

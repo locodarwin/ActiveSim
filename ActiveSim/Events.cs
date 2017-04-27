@@ -194,5 +194,22 @@ namespace ActiveSim
             //_instance.Say("Simplayer " + Sess + " clicked on HUD ID " + id + " -- at x" + x + ", y" + y + ", z" + z + ".");
         }
 
+        private void OnEventObjectClick(IInstance sender)
+        {
+            string Name = sender.Attributes.AvatarName;
+            int ObjID = sender.Attributes.ObjectId;
+
+            StringBuilder str = new StringBuilder();
+
+            str.Append("Avatar ");
+            str.Append(Name);
+            str.Append(" clicked object #");
+            str.Append(ObjID);
+            string str1 = str.ToString();
+
+            _instance.Say(str1);
+
+        }
+
     }
 }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using AW;
 using System.Data.SQLite;
 using System.Data;
+using System.Timers;
+using System.Threading.Tasks;
 
 namespace ActiveSim
 {
@@ -12,7 +14,11 @@ namespace ActiveSim
 
         // Timer identifiers created out here in public
         public static IInstance _instance;
-        public Timer aTimer;
+        public System.Windows.Forms.Timer aTimer;
+        public System.Timers.Timer aCadence;
+
+        // Delegates
+        public delegate void StatDelegate();
 
         public Form1()
         {
@@ -74,12 +80,18 @@ namespace ActiveSim
             public static bool iInUniv = false;
             public static bool iInWorld = false;
             public static bool iSimRun = false;
+            public static bool iCadenceOn = false;
 
             public static string sSimProfile = "Default";
             public static string sCurrencyName = "gold";
             public static int iCurrency = 0;
             public static string sCarryName = "pound";
             public static int iCarryCap = 0;
+
+            // This is a test of multithreading the "Stat" status update feature
+            //(int icon, string action, string message, string color)
+            public static int StatIcon;
+            public static string StatAction, StatMessage, StatColor;
 
             // Console colors (for RGB, switch places the first byte (i.e. ff) with last byte, so 0x336699 = 0x996633
             public static int ColorInv, ColorPresentList, ColorRegList;
@@ -108,11 +120,11 @@ namespace ActiveSim
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            // Initialize and start the timer
-            aTimer = new Timer();
+            // Initialize and start the  AWSDK timer
+            aTimer = new System.Windows.Forms.Timer();
             aTimer.Tick += new EventHandler(aTimer_Tick);
             aTimer.Interval = 100;
-            aTimer.Start();
+            //aTimer.Start();
 
         }
 
@@ -144,6 +156,7 @@ namespace ActiveSim
             _instance.EventAvatarDelete += OnEventAvatarDelete;
             _instance.EventChat += OnEventChat;
             _instance.EventHudClick += OnEventHUDClick;
+            _instance.EventObjectClick += OnEventObjectClick;
 
             // Set universe login parameters
             _instance.Attributes.LoginName = Globals.sBotName;
@@ -161,7 +174,7 @@ namespace ActiveSim
             }
             else
             {
-                Stat(1, "Universe Login", "Universe entry successful.", "black");
+                Stat(1, "Universe Login", "Universe entry successful. (" + rc + ")", "black");
                 Globals.iInUniv = true;
                 butLoginWorld.Enabled = true;
                 butLogOut.Enabled = true;
@@ -177,7 +190,7 @@ namespace ActiveSim
             Globals.CitTable.Columns.Add("Citnum", typeof(string));
 
             // Initialize and start the timer
-            aTimer = new Timer();
+            aTimer = new System.Windows.Forms.Timer();
             aTimer.Tick += new EventHandler(aTimer_Tick);
             aTimer.Interval = 100;
             aTimer.Start();
@@ -204,10 +217,13 @@ namespace ActiveSim
             butLoginWorld.Enabled = false;
             butLogOut.Enabled = false;
 
+            // Prepare caretakermode
+            _instance.Attributes.EnterGlobal = true;
+
             // Enter world
             Stat(1, "World Login", "Logging into world " + Globals.sWorld + ".", "black");
             var rc = _instance.Enter(Globals.sWorld);
-            _instance.Attributes.ServerCaretakers = _instance.Attributes.LoginName.ToString();
+            
             if (rc != Result.Success)
             {
                 Stat(1, "Error", "Failed to log into world " + Globals.sWorld + " (reason:" + rc + ").", "red");
@@ -256,11 +272,22 @@ namespace ActiveSim
                 return;
             }
 
+            // Turn off & kill timer (if it's on)
             aTimer.Stop();
+
+            // Turn off & kill Cadence (if running)
+            if (Globals.iCadenceOn == true)
+            {
+                aCadence.Stop();
+                Stat(1, "Cadence", "Cadence turned off", "black");
+                Globals.iCadenceOn = false;
+            }
+            
 
             // Dispose of the API instance, reset all flags
             _instance.HudClear(0);
-
+            _instance.Dispose();
+            Utility.Wait(0);
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.iInWorld = false;
@@ -277,7 +304,8 @@ namespace ActiveSim
             butSimStatus.Enabled = false;
             butSimStop.Enabled = false;
 
-            _instance.Dispose();
+            
+
         }
 
         private void butSendChat_Click(object sender, EventArgs e)
@@ -313,12 +341,23 @@ namespace ActiveSim
         // Form1 is closing; let's do a clean log out of the universe first
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+
+            // Turn off & kill Cadence (if running)
+            if (Globals.iCadenceOn == true)
+            {
+                aCadence.Stop();
+                Stat(1, "Cadence", "Cadence turned off", "black");
+                Globals.iCadenceOn = false;
+            }
+
             // turn off HUD
             _instance.HudClear(0);
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.m_db.Close();
             _instance.Dispose();
+            Utility.Wait(0);
+
         }
 
         private void Chat(int icon, string speaker, string message, string color)
@@ -347,19 +386,62 @@ namespace ActiveSim
 
         private void Stat(int icon, string action, string message, string color)
         {
+
+            Globals.StatIcon = icon;
+            Globals.StatAction = action;
+            Globals.StatMessage = message;
+            Globals.StatColor = color;
+
+            if (ControlInvokeRequired(StatMon, () => ExecStat())) return;
+
             DateTime now = DateTime.Now;
             string dt = String.Format("{0:M/d/yyyy - HH:mm:ss}", now);
             ListViewItem item = new ListViewItem(dt, 0);
             item.UseItemStyleForSubItems = false;
-            item.SubItems.Add(action);
-            item.SubItems.Add(message);
+            item.SubItems.Add(Globals.StatAction);
+            item.SubItems.Add(Globals.StatMessage);
 
             item.SubItems[1].Font = new System.Drawing.Font(ChatMon.Font, System.Drawing.FontStyle.Bold);
-            item.SubItems[1].ForeColor = System.Drawing.Color.FromName(color);
-            item.SubItems[2].ForeColor = System.Drawing.Color.FromName(color);
+            item.SubItems[1].ForeColor = System.Drawing.Color.FromName(Globals.StatColor);
+            item.SubItems[2].ForeColor = System.Drawing.Color.FromName(Globals.StatColor);
+
             StatMon.Items.Add(item);
             StatMon.EnsureVisible(StatMon.Items.Count - 1);
+            //Console.WriteLine("I'm NOT in the threadpool, fool!");
 
+        }
+
+        private void ExecStat()
+        {
+            DateTime now = DateTime.Now;
+            string dt = String.Format("{0:M/d/yyyy - HH:mm:ss}", now);
+            ListViewItem item = new ListViewItem(dt, 0);
+            item.UseItemStyleForSubItems = false;
+            item.SubItems.Add(Globals.StatAction);
+            item.SubItems.Add(Globals.StatMessage);
+
+            item.SubItems[1].Font = new System.Drawing.Font(ChatMon.Font, System.Drawing.FontStyle.Bold);
+            item.SubItems[1].ForeColor = System.Drawing.Color.FromName(Globals.StatColor);
+            item.SubItems[2].ForeColor = System.Drawing.Color.FromName(Globals.StatColor);
+
+            StatMon.Items.Add(item);
+            StatMon.EnsureVisible(StatMon.Items.Count - 1);
+            //Console.WriteLine("I'm in the threadpool, fool!");
+        }
+
+        /// <summary>
+        /// Helper method to determin if invoke required, if so will rerun method on correct thread.
+        /// if not do nothing.
+        /// </summary>
+        /// <param name="c">Control that might require invoking</param>
+        /// <param name="a">action to preform on control thread if so.</param>
+        /// <returns>true if invoke required</returns>
+        public bool ControlInvokeRequired(Control c, Action a)
+        {
+            if (c.InvokeRequired) c.Invoke(new MethodInvoker(delegate { a(); }));
+            else return false;
+
+            return true;
         }
 
 
