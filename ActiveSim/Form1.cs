@@ -115,6 +115,26 @@ namespace ActiveSim
 
         }
 
+        public class WorldFarmItem
+        {
+            public string SimProfile { get; set; }
+            public string Crop { get; set; }
+            public int ObjectID { get; set; }
+            public int PosX { get; set; }
+            public int PosY { get; set; }
+            public int PosZ { get; set; }
+            public int Stages { get; set; }                     // number of stages for crop
+            public List<string> StageModels { get; set; }       // list of models for the stages
+            public List<float> StageTime { get; set; }          // list of stage durations for the stages
+
+
+
+
+
+
+        }
+
+
 
         // The form's starting point
         private void Form1_Load(object sender, EventArgs e)
