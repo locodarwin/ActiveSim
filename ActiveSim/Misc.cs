@@ -228,6 +228,7 @@ namespace ActiveSim
         {
             string Registered;
             string PermLevel = "Citizen";
+            string PlantFlag = "no";
             
             // Check to see if the citizen is already registered for the sim, if not, their perm level is "Citizen," which has no permissions
             if (CheckRegistered(Name) == true)
@@ -254,7 +255,7 @@ namespace ActiveSim
                     PermLevel = "Simplayer";  // default for registered Simplayers, in case for some reason not found in Permlevel Dictionary
                 }
             }
-            Globals.CitTable.Rows.Add(Name, iSess, Registered, PermLevel, Citnum);
+            Globals.CitTable.Rows.Add(Name, iSess, Registered, PermLevel, Citnum, PlantFlag);
             return Registered;
         }
 
@@ -430,6 +431,39 @@ namespace ActiveSim
             }
             return Name;
         }
+
+        private bool GetPlantFlag(int iSess)
+        {
+            DataRow[] check = Globals.CitTable.Select("Session = '" + iSess + "'");
+            string Plant = "no";
+            int rows = check.Count();
+            if (rows != 0)
+            {
+                foreach (DataRow z in check)
+                {
+                    Plant = z.Field<string>(5);
+                }
+            }
+            if (Plant == "yes")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void PlantFlagUpdate(int iSess, string Flag)
+        {
+            foreach (DataRow dr in Globals.CitTable.Rows)
+            {
+                if (dr[1].ToString() == iSess.ToString())
+                {
+                    dr[5] = Flag;
+                }
+            }
+
+        }
+
 
 
     }

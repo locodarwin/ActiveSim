@@ -6,17 +6,30 @@ using System.Threading.Tasks;
 
 namespace ActiveSim
 {
+
+
     public partial class Form1
     {
         public void Cadence(object sender, EventArgs e)
         {
-            Stat(1, "Cadence", "Cadence event initiated", "black");
-            _instance.Say("Cadence event initiated...");
+
+            if (Globals.Debug == true)
+            {
+                Stat(1, "Cadence", "Cadence event initiated", "black");
+                _instance.Say("Cadence event initiated...");
+            }
 
 
-            // Load all objects from table
+            // Update all WorldFarmItems
+            foreach (WorldFarmItem d in Globals.WorldFarmItemList)
+            {
+                //string q = "Updating object " + d.ObjectID.ToString() + 
 
-            // Parse through and update
+                d.Update();
+
+                
+            }
+
 
 
 

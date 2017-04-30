@@ -93,6 +93,10 @@ namespace ActiveSim
             public static int StatIcon;
             public static string StatAction, StatMessage, StatColor;
 
+            // Debugging
+            public static bool Debug = false;
+            public static string Error = "";
+
             // Console colors (for RGB, switch places the first byte (i.e. ff) with last byte, so 0x336699 = 0x996633
             public static int ColorInv, ColorPresentList, ColorRegList;
 
@@ -102,6 +106,9 @@ namespace ActiveSim
             // World user list
             public static DataTable CitTable = new DataTable();
             
+            // World farm objects & related
+            public static List<WorldFarmItem> WorldFarmItemList = new List<WorldFarmItem>();
+            public static string TilledSoil = "plantingdirtsq.rwx";
 
             // Permissions dictionaries
             public static Dictionary<string, string> CitnumPermLevel = new Dictionary<string, string>();
@@ -114,27 +121,6 @@ namespace ActiveSim
             public static SQLiteConnection m_db;
 
         }
-
-        public class WorldFarmItem
-        {
-            public string SimProfile { get; set; }
-            public string Crop { get; set; }
-            public int ObjectID { get; set; }
-            public int PosX { get; set; }
-            public int PosY { get; set; }
-            public int PosZ { get; set; }
-            public int Stages { get; set; }                     // number of stages for crop
-            public List<string> StageModels { get; set; }       // list of models for the stages
-            public List<float> StageTime { get; set; }          // list of stage durations for the stages
-
-
-
-
-
-
-        }
-
-
 
         // The form's starting point
         private void Form1_Load(object sender, EventArgs e)
@@ -208,6 +194,7 @@ namespace ActiveSim
             Globals.CitTable.Columns.Add("Registered", typeof(string));
             Globals.CitTable.Columns.Add("PermLevel", typeof(string));
             Globals.CitTable.Columns.Add("Citnum", typeof(string));
+            Globals.CitTable.Columns.Add("PlantFlag", typeof(string));
 
             // Initialize and start the timer
             aTimer = new System.Windows.Forms.Timer();
@@ -371,12 +358,12 @@ namespace ActiveSim
             }
 
             // turn off HUD
-            _instance.HudClear(0);
+            //_instance.HudClear(0);
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.m_db.Close();
-            _instance.Dispose();
-            Utility.Wait(0);
+            //_instance.Dispose();
+            //Utility.Wait(0);
 
         }
 

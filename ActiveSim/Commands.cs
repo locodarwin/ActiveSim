@@ -57,9 +57,43 @@ namespace ActiveSim
                 case "inv":
                     DoInv(sName, iType, iSession, cmd);
                     break;
+                case "farm":
+                    DoFarm(sName, iType, iSession, cmd);
+                    break;
+                case "debug":
+                    DoDebug(sName, iType, iSession, cmd);
+                    break;
 
             }
             //Stat(1, "Test", cmd, "black");
+        }
+
+        //DoDebug /DEBUG
+        private void DoDebug(string sName, int iType, int iSess, string[] cmd)
+        {
+            int iCitnum = GetCitnum(sName);
+            Stat(1, "CMD", "Command: DEBUG (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
+
+            // Check permissions
+            if (CheckPerms(iCitnum, cmd[0]) == false)
+            {
+                Response(iSess, iType, "Sorry, " + sName + ", but you do not have permission to use the " + cmd[0] + " command.");
+                return;
+            }
+
+            if (cmd[1] == "on")
+            {
+                Response(iSess, iType, "Debug mode on.");
+                Globals.Debug = true;
+            }
+
+            if (cmd[1] == "off")
+            {
+                Response(iSess, iType, "Debug mode off.");
+                Globals.Debug = false;
+            }
+
+
         }
 
         // Command VERSION
@@ -352,7 +386,7 @@ namespace ActiveSim
 
         }
 
-        // Command Present
+        // Command PRESENT
         private void DoPresent(string sName, int iType, int iSess, string[] cmd)
         {
             int iCitnum = GetCitnum(sName);
@@ -396,7 +430,7 @@ namespace ActiveSim
 
         }
 
-        // Command Console
+        // Command CONSOLE
         private void DoConsole(string sName, int iType, int iSess, string[] cmd)
         {
             ConsolePrint(iSess, 0x009999, true, false, "Testing:\tThis is a test message.");
@@ -446,7 +480,7 @@ namespace ActiveSim
             
         }
 
-        // DoGive /give [citname] [assetnum] [type]
+        // DoGive /GIVE [citname] [assetnum] [type]
         private void DoGive(string sName, int iType, int iSess, string[] cmd)
         {
             int iCitnum = GetCitnum(sName);
@@ -512,7 +546,7 @@ namespace ActiveSim
         }
 
 
-        // DoInv /inv and inv [simplayer]
+        // DoInv /INV and /INV [simplayer]
         private void DoInv(string sName, int iType, int iSess, string[] cmd)
         {
             int iCitnum = GetCitnum(sName);
@@ -593,6 +627,47 @@ namespace ActiveSim
             }
             reader.Close();
             
+
+        }
+
+        // DoFarm /FARM [cropid] [objectid]
+        private void DoFarm(string sName, int iType, int iSess, string[] cmd)
+        {
+            int iCitnum = GetCitnum(sName);
+            Stat(1, "CMD", "Command: FARM (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
+
+            // Check permissions
+            if (CheckPerms(iCitnum, cmd[0]) == false)
+            {
+                Response(iSess, iType, "Sorry, " + sName + ", but you do not have permission to use the " + cmd[0] + " command.");
+                return;
+            }
+
+            int a = Convert.ToInt32(cmd[1]);
+            int b = Convert.ToInt32(cmd[2]);
+
+            WorldFarmItem d = new WorldFarmItem();
+            bool rc = d.Init(a, b);
+            if (rc != true)
+            {
+                _instance.Say(Globals.Error);
+            }
+
+            Globals.WorldFarmItemList.Add(d);
+
+            if (Globals.Debug == true)
+            {
+                foreach (WorldFarmItem k in Globals.WorldFarmItemList)
+                {
+                    string q = "I instantiated the object. Items: " + k.CropName + ", " + k.Fertilizer + ", " + k.YieldSeed + " " + k.Model;
+                    string e = " -- Staged Models: ";
+                    foreach (string f in k.StageModels)
+                    {
+                        e = e + f + ", ";
+                    }
+                    _instance.Say(q + e);
+                }
+            }
 
         }
 
