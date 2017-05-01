@@ -71,7 +71,7 @@ namespace ActiveSim
             _instance.Attributes.HudElementX = 64;
             _instance.Attributes.HudElementY = 0;
             _instance.Attributes.HudElementZ = 2;
-            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks|AW.HudElementFlag.Highlight;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
             _instance.Attributes.HudElementColor = 0xFFFFFF;
             _instance.Attributes.HudElementSizeX = 64;
             _instance.Attributes.HudElementSizeY = 64;
@@ -160,7 +160,56 @@ namespace ActiveSim
 
             _instance.HudCreate();
 
+            _instance.Attributes.HudElementType = AW.HudType.Image;
+            _instance.Attributes.HudElementText = "/hud/ntdibut.jpg";
+            _instance.Attributes.HudElementId = 10;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.BottomLeft;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 0;
+            _instance.Attributes.HudElementY = -32;
+            _instance.Attributes.HudElementZ = 2;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Stretch;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 256;
+            _instance.Attributes.HudElementSizeY = 32;
 
+            _instance.HudCreate();
+
+            _instance.Attributes.HudElementType = AW.HudType.Text;
+            _instance.Attributes.HudElementText = "Status";
+            _instance.Attributes.HudElementId = 11;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.BottomLeft;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 0;
+            _instance.Attributes.HudElementY = -32;
+            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Stretch;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 256;
+            _instance.Attributes.HudElementSizeY = 32;
+
+            _instance.HudCreate();
+        }
+
+        private void StatusHUD(int iSess, string Msg)
+        {
+            _instance.Attributes.HudElementType = AW.HudType.Text;
+            _instance.Attributes.HudElementText = Msg;
+            _instance.Attributes.HudElementId = 11;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.BottomLeft;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 0;
+            _instance.Attributes.HudElementY = -32;
+            _instance.Attributes.HudElementZ = 1;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Stretch;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 256;
+            _instance.Attributes.HudElementSizeY = 32;
+
+            _instance.HudCreate();
         }
 
         private void EraseHUD(int iSess)
@@ -173,7 +222,8 @@ namespace ActiveSim
             // Get information about the session (name, citnum) and report the command
             int iCitnum = CitGetCitnum(iSess);
             string sName = CitGetName(iCitnum.ToString());
-            Stat(1, "HUD CMD", "HUD Command: inv (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
+            StatusHUD(iSess, "Clicked 'Inventory'");
+            Stat(1, "HUD CMD", "HUD Command: INVENTORY (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
 
 
             // Load up inventory
@@ -212,7 +262,35 @@ namespace ActiveSim
             reader.Close();
         }
 
+        private void ButtonPlant(int iSess)
+        {
+            // Get information about the session (name, citnum) and report the command
+            int iCitnum = CitGetCitnum(iSess);
+            string sName = CitGetName(iCitnum.ToString());
+            StatusHUD(iSess, "Plant: click tilled soil...");
+            Stat(1, "HUD CMD", "HUD Command: PLANT (requested by " + sName + " (" + iCitnum.ToString() + ")", "black");
 
+            // Make the HUD element blink
+            _instance.Attributes.HudElementType = AW.HudType.Image;
+            _instance.Attributes.HudElementText = "/hud/plant-yes.jpg";
+            _instance.Attributes.HudElementId = 4;
+            _instance.Attributes.HudElementSession = iSess;
+            _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+            _instance.Attributes.HudElementOpacity = 1.0f;
+            _instance.Attributes.HudElementX = 64;
+            _instance.Attributes.HudElementY = 0;
+            _instance.Attributes.HudElementZ = 2;
+            _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks|AW.HudElementFlag.Highlight;
+            _instance.Attributes.HudElementColor = 0xFFFFFF;
+            _instance.Attributes.HudElementSizeX = 64;
+            _instance.Attributes.HudElementSizeY = 64;
+
+            _instance.HudCreate();
+
+            // Set plant flag for this user
+            PlantFlagUpdate(iSess, "yes");
+
+        }
 
 
     }

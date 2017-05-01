@@ -6,6 +6,7 @@ using System.Data.SQLite;
 using System.Data;
 using System.Timers;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace ActiveSim
 {
@@ -15,7 +16,8 @@ namespace ActiveSim
         // Timer identifiers created out here in public
         public static IInstance _instance;
         public System.Windows.Forms.Timer aTimer;
-        public System.Timers.Timer aCadence;
+        //public System.Timers.Timer aCadence;
+        public System.Threading.Timer aCadence;
 
         // Delegates
         public delegate void StatDelegate();
@@ -93,6 +95,10 @@ namespace ActiveSim
             public static int StatIcon;
             public static string StatAction, StatMessage, StatColor;
 
+            // Debugging
+            public static bool Debug = false;
+            public static string Error = "";
+
             // Console colors (for RGB, switch places the first byte (i.e. ff) with last byte, so 0x336699 = 0x996633
             public static int ColorInv, ColorPresentList, ColorRegList;
 
@@ -102,6 +108,9 @@ namespace ActiveSim
             // World user list
             public static DataTable CitTable = new DataTable();
             
+            // World farm objects & related
+            public static List<WorldFarmItem> WorldFarmItemList = new List<WorldFarmItem>();
+            public static string TilledSoil = "plantingdirtsq.rwx";
 
             // Permissions dictionaries
             public static Dictionary<string, string> CitnumPermLevel = new Dictionary<string, string>();
@@ -114,7 +123,6 @@ namespace ActiveSim
             public static SQLiteConnection m_db;
 
         }
-
 
         // The form's starting point
         private void Form1_Load(object sender, EventArgs e)
@@ -188,6 +196,7 @@ namespace ActiveSim
             Globals.CitTable.Columns.Add("Registered", typeof(string));
             Globals.CitTable.Columns.Add("PermLevel", typeof(string));
             Globals.CitTable.Columns.Add("Citnum", typeof(string));
+            Globals.CitTable.Columns.Add("PlantFlag", typeof(string));
 
             // Initialize and start the timer
             aTimer = new System.Windows.Forms.Timer();
@@ -278,7 +287,8 @@ namespace ActiveSim
             // Turn off & kill Cadence (if running)
             if (Globals.iCadenceOn == true)
             {
-                aCadence.Stop();
+                //aCadence.Stop();
+                aCadence.Change(Timeout.Infinite, Timeout.Infinite);
                 Stat(1, "Cadence", "Cadence turned off", "black");
                 Globals.iCadenceOn = false;
             }
@@ -345,18 +355,19 @@ namespace ActiveSim
             // Turn off & kill Cadence (if running)
             if (Globals.iCadenceOn == true)
             {
-                aCadence.Stop();
+                //aCadence.Stop();
+                aCadence.Change(Timeout.Infinite, Timeout.Infinite);
                 Stat(1, "Cadence", "Cadence turned off", "black");
                 Globals.iCadenceOn = false;
             }
 
             // turn off HUD
-            _instance.HudClear(0);
+            //_instance.HudClear(0);
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.m_db.Close();
-            _instance.Dispose();
-            Utility.Wait(0);
+            //_instance.Dispose();
+            //Utility.Wait(0);
 
         }
 

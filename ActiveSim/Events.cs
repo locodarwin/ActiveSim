@@ -81,8 +81,6 @@ namespace ActiveSim
             // Add to the CitTable, return whether or not is registered
             string Registered = CitTableAdd(Name, Sess, Citnum);
 
-            // Log the event in the status window, and draw HUD if the citizen is registered
-
             // Check to see if registered - if so, and Sim is started, draw HUD
             if (Registered == "yes")
             {
@@ -156,36 +154,47 @@ namespace ActiveSim
             {
                 Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Attack' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
                 ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Attack' (to be developed)");
+                StatusHUD(Sess, "Clicked 'Attack' (TBD)");
             }
 
             if (id == 3)
             {
                 Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Settings' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
                 ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Settings' (to be developed)");
+                StatusHUD(Sess, "Clicked 'Settings' (TBD)");
             }
 
             if (id == 4)
             {
-                Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Plant' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
-                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Plant' (to be developed)");
+                //Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Plant' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
+                //ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Plant' (to be developed)");
+                //StatusHUD(Sess, "Clicked 'Plant' (TBD)");
+
+                ButtonPlant(Sess);
+
+
+
             }
 
             if (id == 5)
             {
                 Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Extra1' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
-                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Extra BUtton1' (to be developed)");
+                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Extra Button1' (to be developed)");
+                StatusHUD(Sess, "Clicked 'Button1' (TBD)");
             }
 
             if (id == 6)
             {
                 Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Extra2' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
-                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Extra BUtton2' (to be developed)");
+                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Extra Button2' (to be developed)");
+                StatusHUD(Sess, "Clicked 'Button2' (TBD)");
             }
 
             if (id == 7)
             {
                 Stat(1, "HUD CMD", "Simplayer session " + Sess + " clicked on 'Extra3' -- at x" + x + ", y" + y + ", z" + z + ".", "black");
-                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Extra BUtton3' (to be developed)");
+                ConsolePrint(Sess, Globals.ColorInv, true, false, "Attack:\tYou clicked 'Extra Button3' (to be developed)");
+                StatusHUD(Sess, "Clicked 'Button3' (TBD)");
             }
 
 
@@ -198,16 +207,72 @@ namespace ActiveSim
         {
             string Name = sender.Attributes.AvatarName;
             int ObjID = sender.Attributes.ObjectId;
+            int iSess = sender.Attributes.AvatarSession;
 
+            // Check to see if the user (session) has the plant flag on
+            if (GetPlantFlag(iSess) == true)
+            {
+                // Check to see if the user clicked tilled soil
+                string tModel = "";
+                Form1._instance.Attributes.ObjectNumber = 0;
+                Form1._instance.Attributes.ObjectId = ObjID;
+                Form1._instance.ObjectQuery();
+                tModel = Form1._instance.Attributes.ObjectModel;
+
+                if (tModel == Globals.TilledSoil)
+                {
+                    WorldFarmItem d = new WorldFarmItem();
+                    bool rc = d.Init(1, ObjID);
+                    if (rc != true)
+                    {
+                        _instance.Say(Globals.Error);
+                    }
+
+                    Globals.WorldFarmItemList.Add(d);
+                    StatusHUD(iSess, "Planted Wheat");
+
+                }
+                else
+                {
+                    StatusHUD(iSess, "Aborted: not tilled soil");
+                   
+                }
+
+                // Turm plant HUD blink off
+                _instance.Attributes.HudElementType = AW.HudType.Image;
+                _instance.Attributes.HudElementText = "/hud/plant-yes.jpg";
+                _instance.Attributes.HudElementId = 4;
+                _instance.Attributes.HudElementSession = iSess;
+                _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+                _instance.Attributes.HudElementOpacity = 1.0f;
+                _instance.Attributes.HudElementX = 64;
+                _instance.Attributes.HudElementY = 0;
+                _instance.Attributes.HudElementZ = 2;
+                _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+                _instance.Attributes.HudElementColor = 0xFFFFFF;
+                _instance.Attributes.HudElementSizeX = 64;
+                _instance.Attributes.HudElementSizeY = 64;
+
+                _instance.HudCreate();
+                PlantFlagUpdate(iSess, "no");
+                return;
+            }
+
+
+
+
+            /*
             StringBuilder str = new StringBuilder();
-
             str.Append("Avatar ");
             str.Append(Name);
             str.Append(" clicked object #");
             str.Append(ObjID);
             string str1 = str.ToString();
-
             _instance.Say(str1);
+            */
+
+
+            StatusHUD(iSess, "Clicked object #" + ObjID.ToString());
 
         }
 
