@@ -99,20 +99,29 @@ namespace ActiveSim
             PosRoll = Form1._instance.Attributes.ObjectRoll;
             Model = Form1._instance.Attributes.ObjectModel;
 
-            // Change the model of the object to first stage
-            Form1._instance.Attributes.ObjectNumber = 0;
-            Form1._instance.Attributes.ObjectId = pObjectID;
+            // Create a new model at the same location which is the 1st stage of the crop
+            // Don't remove the old one, and keep its model number as well for later comparisons
+            //Form1._instance.Attributes.ObjectNumber = 0;
+            //Form1._instance.Attributes.ObjectId = pObjectID;
             Form1._instance.Attributes.ObjectModel = StageModels.ElementAt(0);
-            Form1._instance.ObjectChange();
+            Form1._instance.Attributes.ObjectDescription = CropName;
+            Form1._instance.ObjectAdd();
+
+            // Store new objectID
+            //Form1._instance.Attributes.ObjectNumber = 0;
+            //Form1._instance.Attributes.ObjectId = pObjectID;
+            //Form1._instance.Attributes.ObjectModel = StageModels.ElementAt(0);
+            //Form1._instance.ObjectChange();
+            pObjectID = Form1._instance.Attributes.ObjectId;
 
             // Set stage and decide the true values for the stages
             pCurrentStage = 1;
             pCadenceCounter = 0;
+            var rnd = new Random(DateTime.Now.Millisecond);
             foreach (string e in StageTime)
             {
                 string[] times = e.Split('-');
-                var rnd = new Random(DateTime.Now.Millisecond);
-                int tick = rnd.Next(Convert.ToInt32(times[0]), Convert.ToInt32(times[1]));
+                int tick = rnd.Next(Convert.ToInt32(times[0]), Convert.ToInt32(times[1]) + 1);
                 //Console.WriteLine("Stage time: " + tick);
                 pStageTime.Add(tick);
             }
@@ -137,6 +146,11 @@ namespace ActiveSim
             {
 
                 //Form1._instance.Say("Updating object " + pObjectID + " for stage " + (pCurrentStage + 1) + " of " + Stages);
+                // Query the object to make sure we're looking at the right one
+                Form1._instance.Attributes.ObjectNumber = 0;
+                Form1._instance.Attributes.ObjectId = pObjectID;
+                Form1._instance.ObjectQuery();
+
 
                 // Change the model of the object to first stage
                 Form1._instance.Attributes.ObjectNumber = 0;

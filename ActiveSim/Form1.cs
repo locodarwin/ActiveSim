@@ -6,6 +6,7 @@ using System.Data.SQLite;
 using System.Data;
 using System.Timers;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace ActiveSim
 {
@@ -15,7 +16,8 @@ namespace ActiveSim
         // Timer identifiers created out here in public
         public static IInstance _instance;
         public System.Windows.Forms.Timer aTimer;
-        public System.Timers.Timer aCadence;
+        //public System.Timers.Timer aCadence;
+        public System.Threading.Timer aCadence;
 
         // Delegates
         public delegate void StatDelegate();
@@ -285,7 +287,8 @@ namespace ActiveSim
             // Turn off & kill Cadence (if running)
             if (Globals.iCadenceOn == true)
             {
-                aCadence.Stop();
+                //aCadence.Stop();
+                aCadence.Change(Timeout.Infinite, Timeout.Infinite);
                 Stat(1, "Cadence", "Cadence turned off", "black");
                 Globals.iCadenceOn = false;
             }
@@ -352,7 +355,8 @@ namespace ActiveSim
             // Turn off & kill Cadence (if running)
             if (Globals.iCadenceOn == true)
             {
-                aCadence.Stop();
+                //aCadence.Stop();
+                aCadence.Change(Timeout.Infinite, Timeout.Infinite);
                 Stat(1, "Cadence", "Cadence turned off", "black");
                 Globals.iCadenceOn = false;
             }

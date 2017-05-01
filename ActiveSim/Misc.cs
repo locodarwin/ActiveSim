@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Data;
 using AW;
+using System.Threading;
 
 namespace ActiveSim
 {
@@ -89,10 +90,11 @@ namespace ActiveSim
             LoadPerms();
 
             // Start Cadence
-            aCadence = new System.Timers.Timer();
-            aCadence.Elapsed += new System.Timers.ElapsedEventHandler(Cadence);
-            aCadence.Interval = 60000;
-            aCadence.Start();
+            //aCadence = new System.Timers.Timer();
+            //aCadence.Elapsed += new System.Timers.ElapsedEventHandler(Cadence);
+            //aCadence.Interval = 60000;
+            //aCadence.Start();
+            aCadence = new System.Threading.Timer(new System.Threading.TimerCallback(Cadence), null, 0, 60000);
             Stat(1, "Cadence", "Cadence turned on - interval 1 minute", "black");
             Globals.iCadenceOn = true;
 
@@ -113,7 +115,8 @@ namespace ActiveSim
             // Turn off & kill Cadence (if running)
             if (Globals.iCadenceOn == true)
             {
-                aCadence.Stop();
+                //aCadence.Stop();
+                aCadence.Change(Timeout.Infinite, Timeout.Infinite);
                 Stat(1, "Cadence", "Cadence turned off", "black");
                 Globals.iCadenceOn = false;
             }
