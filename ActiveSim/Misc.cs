@@ -94,7 +94,14 @@ namespace ActiveSim
             //aCadence.Elapsed += new System.Timers.ElapsedEventHandler(Cadence);
             //aCadence.Interval = 60000;
             //aCadence.Start();
-            aCadence = new System.Threading.Timer(new System.Threading.TimerCallback(Cadence), null, 0, 60000);
+            //aCadence = new System.Threading.Timer(new System.Threading.TimerCallback(Cadence), null, 0, 60000);
+
+            // Initialize the Cadence timer
+            aCadence = new System.Windows.Forms.Timer();
+            aCadence.Tick += new EventHandler(Cadence);
+            aCadence.Interval = 60000;
+            aCadence.Enabled = true;
+            aCadence.Start();
             Stat(1, "Cadence", "Cadence turned on - interval 1 minute", "black");
             Globals.iCadenceOn = true;
 
@@ -115,8 +122,8 @@ namespace ActiveSim
             // Turn off & kill Cadence (if running)
             if (Globals.iCadenceOn == true)
             {
-                //aCadence.Stop();
-                aCadence.Change(Timeout.Infinite, Timeout.Infinite);
+                aCadence.Stop();
+                //aCadence.Change(Timeout.Infinite, Timeout.Infinite);
                 Stat(1, "Cadence", "Cadence turned off", "black");
                 Globals.iCadenceOn = false;
             }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ActiveSim
@@ -11,8 +13,8 @@ namespace ActiveSim
 
     public partial class Form1
     {
-        //public void Cadence(object sender, EventArgs e)
-        public void Cadence(object sender)
+        public void Cadence(object sender, EventArgs e)
+        //public void Cadence(object sender)
         {
 
             //Globals.Debug = true;
@@ -23,6 +25,9 @@ namespace ActiveSim
                 _instance.Say("Cadence event initiated.");
             }
 
+            // Fire off the background Cadence thread
+            CadenceWorker.RunWorkerAsync();
+
 
             // Disable object/HUD event handlers temporarily
             //_instance.EventHudClick += null;
@@ -32,16 +37,13 @@ namespace ActiveSim
             foreach (WorldFarmItem d in Globals.WorldFarmItemList)
             {
                 //string q = "Updating object " + d.ObjectID.ToString() + 
-
                 d.Update();
 
-                
             }
 
             // Re-enable event handlers
             //_instance.EventHudClick += OnEventHUDClick;
             //_instance.EventObjectClick += OnEventObjectClick;
-
 
 
             if (Globals.Debug == true)
@@ -51,5 +53,32 @@ namespace ActiveSim
             }
             sw.Stop();
         }
+
+
+        private void CadenceThread(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker bgWorker = (BackgroundWorker)sender;
+
+            foreach (WorldFarmItem d in Globals.WorldFarmItemList)
+            {
+                //string q = "Updating object " + d.ObjectID.ToString() + 
+                d.Update();
+
+            }
+
+        }
+
+
+        private void CadenceProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //textBox1.Text = e.ProgressPercentage.ToString();
+        }
+
+        void CadenceRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //button1.Enabled = true;
+        }
+
+
     }
 }
