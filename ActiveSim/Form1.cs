@@ -7,6 +7,7 @@ using System.Data;
 using System.Timers;
 using System.Threading.Tasks;
 using System.Threading;
+using System.ComponentModel;
 
 namespace ActiveSim
 {
@@ -17,7 +18,11 @@ namespace ActiveSim
         public static IInstance _instance;
         public System.Windows.Forms.Timer aTimer;
         //public System.Timers.Timer aCadence;
-        public System.Threading.Timer aCadence;
+        // public System.Threading.Timer aCadence;
+        public System.Windows.Forms.Timer aCadence;
+
+        // Cadence 
+        private readonly BackgroundWorker CadenceWorker;
 
         // Delegates
         public delegate void StatDelegate();
@@ -51,6 +56,13 @@ namespace ActiveSim
             // Open the database
             Globals.m_db = new SQLiteConnection("data source=activesim.db;version=3");
             Globals.m_db.Open();
+
+            // Prepare Cadence as a background worker
+            CadenceWorker = new BackgroundWorker();
+            CadenceWorker.WorkerReportsProgress = true;
+            CadenceWorker.DoWork += CadenceThread;
+            CadenceWorker.ProgressChanged += CadenceProgressChanged;
+            CadenceWorker.RunWorkerCompleted += CadenceRunWorkerCompleted;
 
             Stat(1, "Startup", Globals.sAppName + " " + Globals.sVersion + " - " + Globals.sByline + ".", "black");
             Stat(1, "Startup", "Bot started and ready to log in.", "black");
@@ -128,11 +140,17 @@ namespace ActiveSim
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            // Initialize and start the  AWSDK timer
+            // Initialize the AW.Wait() timer
             aTimer = new System.Windows.Forms.Timer();
             aTimer.Tick += new EventHandler(aTimer_Tick);
             aTimer.Interval = 100;
             //aTimer.Start();
+
+            // Initialize the Cadence timer
+            aCadence = new System.Windows.Forms.Timer();
+            aCadence.Tick += new EventHandler(Cadence);
+            aCadence.Interval = 60000;
+            aCadence.Enabled = true;
 
         }
 
@@ -292,8 +310,8 @@ namespace ActiveSim
             // Turn off & kill Cadence (if running)
             if (Globals.iCadenceOn == true)
             {
-                //aCadence.Stop();
-                aCadence.Change(Timeout.Infinite, Timeout.Infinite);
+                aCadence.Stop();
+                //aCadence.Change(Timeout.Infinite, Timeout.Infinite);
                 Stat(1, "Cadence", "Cadence turned off", "black");
                 Globals.iCadenceOn = false;
             }
@@ -360,14 +378,14 @@ namespace ActiveSim
             // Turn off & kill Cadence (if running)
             if (Globals.iCadenceOn == true)
             {
-                //aCadence.Stop();
-                aCadence.Change(Timeout.Infinite, Timeout.Infinite);
+                aCadence.Stop();
+                //aCadence.Change(Timeout.Infinite, Timeout.Infinite);
                 Stat(1, "Cadence", "Cadence turned off", "black");
                 Globals.iCadenceOn = false;
             }
 
             // turn off HUD
-            //_instance.HudClear(0);
+            //_instance.HudClear(0);c
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
             Globals.m_db.Close();

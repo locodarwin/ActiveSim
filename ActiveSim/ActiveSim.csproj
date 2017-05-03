@@ -58,6 +58,7 @@
     <Compile Include="Cadence.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="DayNight.cs" />
     <Compile Include="HUD.cs">
       <SubType>Form</SubType>
     </Compile>
