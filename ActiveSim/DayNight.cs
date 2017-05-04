@@ -8,7 +8,7 @@ namespace ActiveSim
 {
     public class DayNight
     {
-        // Publics
+        // Properties
         public string SimProfile { get; set; }
         public string CropName { get; set; }
         public int SunPosX { get; set; }
@@ -31,6 +31,8 @@ namespace ActiveSim
 
         }
 
+
+        // Load day/night status from DB
 
 
     }

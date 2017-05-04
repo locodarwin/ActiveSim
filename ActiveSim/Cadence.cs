@@ -29,6 +29,12 @@ namespace ActiveSim
             CadenceWorker.RunWorkerAsync();
 
 
+
+            // Do day/night
+            DayNight dn = new DayNight();
+            dn.SimProfile = "Default";
+
+
             // Disable object/HUD event handlers temporarily
             //_instance.EventHudClick += null;
             //_instance.EventObjectClick += null;
