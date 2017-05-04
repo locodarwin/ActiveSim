@@ -223,6 +223,11 @@ namespace ActiveSim
             aTimer.Start();
         }
 
+        private void OnCallbackEnter(IInstance sender, Result result)
+        {
+            throw new NotImplementedException();
+        }
+
         private void butLoginWorld_Click(object sender, EventArgs e)
         {
 
