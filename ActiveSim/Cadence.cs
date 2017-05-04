@@ -18,12 +18,7 @@ namespace ActiveSim
         {
 
             //Globals.Debug = true;
-            Stopwatch sw = Stopwatch.StartNew();
-            if (Globals.Debug == true)
-            {
-                Stat(1, "Cadence", "Cadence event initiated", "black");
-                _instance.Say("Cadence event initiated.");
-            }
+            
 
             // Fire off the background Cadence thread
             CadenceWorker.RunWorkerAsync();
@@ -40,24 +35,20 @@ namespace ActiveSim
             //_instance.EventObjectClick += null;
 
             // Update all WorldFarmItems
-            foreach (WorldFarmItem d in Globals.WorldFarmItemList)
-            {
+            //foreach (WorldFarmItem d in Globals.WorldFarmItemList)
+            //{
                 //string q = "Updating object " + d.ObjectID.ToString() + 
-                d.Update();
+             //   d.Update();
 
-            }
+            //}
 
             // Re-enable event handlers
             //_instance.EventHudClick += OnEventHUDClick;
             //_instance.EventObjectClick += OnEventObjectClick;
 
 
-            if (Globals.Debug == true)
-            {
-                Stat(1, "Cadence", "Cadence event completed", "black");
-                _instance.Say("Cadence event completed - Elapsed time: " + sw.ElapsedMilliseconds + "ms. Total items parsed: " + Globals.WorldFarmItemList.Count());
-            }
-            sw.Stop();
+            
+            
         }
 
 
@@ -65,6 +56,17 @@ namespace ActiveSim
         {
             BackgroundWorker bgWorker = (BackgroundWorker)sender;
 
+            Stopwatch sw = Stopwatch.StartNew();
+            if (Globals.Debug == true)
+            {
+                Stat(1, "Cadence", "Cadence event initiated", "black");
+                _instance.Say("Cadence event initiated.");
+            }
+
+
+
+
+
             foreach (WorldFarmItem d in Globals.WorldFarmItemList)
             {
                 //string q = "Updating object " + d.ObjectID.ToString() + 
@@ -72,6 +74,13 @@ namespace ActiveSim
 
             }
 
+
+            sw.Stop();
+            if(Globals.Debug == true)
+            {
+                Stat(1, "Cadence", "Cadence event completed", "black");
+                _instance.Say("Cadence event completed - Elapsed time: " + sw.ElapsedMilliseconds + "ms. Total items parsed: " + Globals.WorldFarmItemList.Count());
+            }
         }
 
 

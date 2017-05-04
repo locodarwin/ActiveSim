@@ -114,7 +114,7 @@ namespace ActiveSim
             //Form1._instance.ObjectChange();
             pObjectID = Form1._instance.Attributes.ObjectId;
 
-            // Set stage and decide the true values for the stages
+            // Set stage and decide the true time values for the stages
             pCurrentStage = 1;
             pCadenceCounter = 0;
             var rnd = new Random(DateTime.Now.Millisecond);
@@ -145,7 +145,7 @@ namespace ActiveSim
             if (pCadenceCounter >= pStageTime[pCurrentStage - 1])
             {
 
-                //Form1._instance.Say("Updating object " + pObjectID + " for stage " + (pCurrentStage + 1) + " of " + Stages);
+                Form1._instance.Say("Updating object " + pObjectID + " for stage " + (pCurrentStage + 1) + " of " + Stages);
                 // Query the object to make sure we're looking at the right one
                 Form1._instance.Attributes.ObjectNumber = 0;
                 Form1._instance.Attributes.ObjectId = pObjectID;
