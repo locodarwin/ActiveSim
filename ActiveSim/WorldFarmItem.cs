@@ -83,36 +83,36 @@ namespace ActiveSim
             StageTime = tStageTime.Split(',').ToList();
 
             // query for and get the x, y, z, yaw, tilt, roll of the object in question
-            Form1._instance.Attributes.ObjectNumber = 0;
-            Form1._instance.Attributes.ObjectId = pObjectID;
-            var rc = Form1._instance.ObjectQuery();
+            Form1.m_bot.Attributes.ObjectNumber = 0;
+            Form1.m_bot.Attributes.ObjectId = pObjectID;
+            var rc = Form1.m_bot.ObjectQuery();
             if (rc != Result.Success)
             {
                 Form1.Globals.Error = "FarmItem Error: Unable to query object.";
                 return false;
             }
-            PosX = Form1._instance.Attributes.ObjectX;
-            PosY = Form1._instance.Attributes.ObjectY;
-            PosZ = Form1._instance.Attributes.ObjectZ;
-            PosYaw = Form1._instance.Attributes.ObjectYaw;
-            PosTilt = Form1._instance.Attributes.ObjectTilt;
-            PosRoll = Form1._instance.Attributes.ObjectRoll;
-            Model = Form1._instance.Attributes.ObjectModel;
+            PosX = Form1.m_bot.Attributes.ObjectX;
+            PosY = Form1.m_bot.Attributes.ObjectY;
+            PosZ = Form1.m_bot.Attributes.ObjectZ;
+            PosYaw = Form1.m_bot.Attributes.ObjectYaw;
+            PosTilt = Form1.m_bot.Attributes.ObjectTilt;
+            PosRoll = Form1.m_bot.Attributes.ObjectRoll;
+            Model = Form1.m_bot.Attributes.ObjectModel;
 
             // Create a new model at the same location which is the 1st stage of the crop
             // Don't remove the old one, and keep its model number as well for later comparisons
             //Form1._instance.Attributes.ObjectNumber = 0;
             //Form1._instance.Attributes.ObjectId = pObjectID;
-            Form1._instance.Attributes.ObjectModel = StageModels.ElementAt(0);
-            Form1._instance.Attributes.ObjectDescription = CropName;
-            Form1._instance.ObjectAdd();
+            Form1.m_bot.Attributes.ObjectModel = StageModels.ElementAt(0);
+            Form1.m_bot.Attributes.ObjectDescription = CropName;
+            Form1.m_bot.ObjectAdd();
 
             // Store new objectID
             //Form1._instance.Attributes.ObjectNumber = 0;
             //Form1._instance.Attributes.ObjectId = pObjectID;
             //Form1._instance.Attributes.ObjectModel = StageModels.ElementAt(0);
             //Form1._instance.ObjectChange();
-            pObjectID = Form1._instance.Attributes.ObjectId;
+            pObjectID = Form1.m_bot.Attributes.ObjectId;
 
             // Set stage and decide the true time values for the stages
             pCurrentStage = 1;
@@ -145,24 +145,24 @@ namespace ActiveSim
             if (pCadenceCounter >= pStageTime[pCurrentStage - 1])
             {
 
-                Form1._instance.Say("Updating object " + pObjectID + " for stage " + (pCurrentStage + 1) + " of " + Stages);
+                Form1.m_bot.Say("Updating object " + pObjectID + " for stage " + (pCurrentStage + 1) + " of " + Stages);
                 // Query the object to make sure we're looking at the right one
-                Form1._instance.Attributes.ObjectNumber = 0;
-                Form1._instance.Attributes.ObjectId = pObjectID;
-                Form1._instance.ObjectQuery();
+                Form1.m_bot.Attributes.ObjectNumber = 0;
+                Form1.m_bot.Attributes.ObjectId = pObjectID;
+                Form1.m_bot.ObjectQuery();
 
 
                 // Change the model of the object to first stage
-                Form1._instance.Attributes.ObjectNumber = 0;
-                Form1._instance.Attributes.ObjectId = pObjectID;
-                Form1._instance.Attributes.ObjectModel = StageModels.ElementAt(pCurrentStage);
-                Form1._instance.Attributes.ObjectX = PosX;
-                Form1._instance.Attributes.ObjectY = PosY;
-                Form1._instance.Attributes.ObjectZ = PosZ;
-                Form1._instance.Attributes.ObjectYaw = PosYaw;
-                Form1._instance.Attributes.ObjectTilt = PosTilt;
-                Form1._instance.Attributes.ObjectRoll = PosRoll;
-                Form1._instance.ObjectChange();
+                Form1.m_bot.Attributes.ObjectNumber = 0;
+                Form1.m_bot.Attributes.ObjectId = pObjectID;
+                Form1.m_bot.Attributes.ObjectModel = StageModels.ElementAt(pCurrentStage);
+                Form1.m_bot.Attributes.ObjectX = PosX;
+                Form1.m_bot.Attributes.ObjectY = PosY;
+                Form1.m_bot.Attributes.ObjectZ = PosZ;
+                Form1.m_bot.Attributes.ObjectYaw = PosYaw;
+                Form1.m_bot.Attributes.ObjectTilt = PosTilt;
+                Form1.m_bot.Attributes.ObjectRoll = PosRoll;
+                Form1.m_bot.ObjectChange();
 
                 pCurrentStage = pCurrentStage + 1;
 

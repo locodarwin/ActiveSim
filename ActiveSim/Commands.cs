@@ -650,7 +650,7 @@ namespace ActiveSim
             bool rc = d.Init(a, b);
             if (rc != true)
             {
-                _instance.Say(Globals.Error);
+                m_bot.Say(Globals.Error);
             }
 
             Globals.WorldFarmItemList.Add(d);
@@ -665,7 +665,7 @@ namespace ActiveSim
                     {
                         e = e + f + ", ";
                     }
-                    _instance.Say(q + e);
+                    m_bot.Say(q + e);
                 }
             }
 

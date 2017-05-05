@@ -18,13 +18,13 @@ namespace ActiveSim
         {
             if (iType == 2)
             {
-                _instance.Whisper(iSess, sMsg);
+                m_bot.Whisper(iSess, sMsg);
                 Stat(1, "Response", "(whispered): " + sMsg, "blue");
                 Chat(1, Globals.sBotName, "(whispered): " + sMsg, "blue");
             }
             else
             {
-                _instance.Say(sMsg);
+                m_bot.Say(sMsg);
                 Stat(1, "Response", sMsg, "black");
                 Chat(1, Globals.sBotName, sMsg, "black");
             }
@@ -117,7 +117,7 @@ namespace ActiveSim
             butSimStop.Enabled = false;
 
             // turn off HUD
-            _instance.HudClear(0);
+            m_bot.HudClear(0);
 
             // Turn off & kill Cadence (if running)
             if (Globals.iCadenceOn == true)
@@ -215,11 +215,11 @@ namespace ActiveSim
 
         private void ConsolePrint(int iSess, AW.Color color, bool bold, bool italics, string msg)
         {
-            _instance.Attributes.ConsoleColor = color;
-            _instance.Attributes.ConsoleBold = bold;
-            _instance.Attributes.ConsoleItalics = italics;
-            _instance.Attributes.ConsoleMessage = "        " + msg;
-            var rc = _instance.ConsoleMessage(iSess);
+            m_bot.Attributes.ConsoleColor = color;
+            m_bot.Attributes.ConsoleBold = bold;
+            m_bot.Attributes.ConsoleItalics = italics;
+            m_bot.Attributes.ConsoleMessage = "        " + msg;
+            var rc = m_bot.ConsoleMessage(iSess);
             if (rc != AW.Result.Success)
             {
                 Console.WriteLine(rc);
@@ -230,8 +230,8 @@ namespace ActiveSim
         // Method to get citizen number
         private int GetCitnum(string sName)
         {
-            _instance.CitizenAttributesByName(sName);
-            return _instance.Attributes.CitizenNumber;
+            m_bot.CitizenAttributesByName(sName);
+            return m_bot.Attributes.CitizenNumber;
         }
 
         private string CitTableAdd(string Name, int iSess, string Citnum)
@@ -391,7 +391,7 @@ namespace ActiveSim
             string Citnum = "0";
             foreach (DataRow dr in Globals.CitTable.Rows)
             {
-                if (dr["Name"] == Name)
+                if ((string)dr["Name"] == Name)
                 {
                     Citnum = dr["Citnum"].ToString();
                 }
