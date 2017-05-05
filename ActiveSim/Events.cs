@@ -100,7 +100,7 @@ namespace ActiveSim
             {
                 Stat(1, Globals.sBotName, "Captain " + Name + " on deck.", "black");
                 Chat(1, Globals.sBotName, "Captain " + Name + " on deck.", "black");
-                _instance.Say("Captain " + Name + " on deck.");
+                m_bot.Say("Captain " + Name + " on deck.");
             }
         }
 
@@ -118,7 +118,7 @@ namespace ActiveSim
             {
                 Stat(1, Globals.sBotName, "Captain " + Name + " has left the deck.", "black");
                 Chat(1, Globals.sBotName, "Captain " + Name + " has left the deck.", "black");
-                _instance.Say("Captain " + Name + " has left the deck.");
+                m_bot.Say("Captain " + Name + " has left the deck.");
             }
             else
             {
@@ -214,10 +214,10 @@ namespace ActiveSim
             {
                 // Check to see if the user clicked tilled soil
                 string tModel = "";
-                Form1._instance.Attributes.ObjectNumber = 0;
-                Form1._instance.Attributes.ObjectId = ObjID;
-                Form1._instance.ObjectQuery();
-                tModel = Form1._instance.Attributes.ObjectModel;
+                Form1.m_bot.Attributes.ObjectNumber = 0;
+                Form1.m_bot.Attributes.ObjectId = ObjID;
+                Form1.m_bot.ObjectQuery();
+                tModel = Form1.m_bot.Attributes.ObjectModel;
 
                 if (tModel == Globals.TilledSoil)
                 {
@@ -225,7 +225,7 @@ namespace ActiveSim
                     bool rc = d.Init(1, ObjID);
                     if (rc != true)
                     {
-                        _instance.Say(Globals.Error);
+                        m_bot.Say(Globals.Error);
                     }
 
                     Globals.WorldFarmItemList.Add(d);
@@ -239,21 +239,21 @@ namespace ActiveSim
                 }
 
                 // Turm plant HUD blink off
-                _instance.Attributes.HudElementType = AW.HudType.Image;
-                _instance.Attributes.HudElementText = "/hud/plant-yes.jpg";
-                _instance.Attributes.HudElementId = 4;
-                _instance.Attributes.HudElementSession = iSess;
-                _instance.Attributes.HudElementOrigin = AW.HudOrigin.Left;
-                _instance.Attributes.HudElementOpacity = 1.0f;
-                _instance.Attributes.HudElementX = 64;
-                _instance.Attributes.HudElementY = 0;
-                _instance.Attributes.HudElementZ = 2;
-                _instance.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
-                _instance.Attributes.HudElementColor = 0xFFFFFF;
-                _instance.Attributes.HudElementSizeX = 64;
-                _instance.Attributes.HudElementSizeY = 64;
+                m_bot.Attributes.HudElementType = AW.HudType.Image;
+                m_bot.Attributes.HudElementText = "/hud/plant-yes.jpg";
+                m_bot.Attributes.HudElementId = 4;
+                m_bot.Attributes.HudElementSession = iSess;
+                m_bot.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+                m_bot.Attributes.HudElementOpacity = 1.0f;
+                m_bot.Attributes.HudElementX = 64;
+                m_bot.Attributes.HudElementY = 0;
+                m_bot.Attributes.HudElementZ = 2;
+                m_bot.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+                m_bot.Attributes.HudElementColor = 0xFFFFFF;
+                m_bot.Attributes.HudElementSizeX = 64;
+                m_bot.Attributes.HudElementSizeY = 64;
 
-                _instance.HudCreate();
+                m_bot.HudCreate();
                 PlantFlagUpdate(iSess, "no");
                 return;
             }

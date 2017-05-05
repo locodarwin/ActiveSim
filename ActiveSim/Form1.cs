@@ -15,17 +15,12 @@ namespace ActiveSim
     {
 
         // Timer identifiers created out here in public
-        public static IInstance _instance;
+        public static IInstance m_bot;
         public System.Windows.Forms.Timer aTimer;
-        //public System.Timers.Timer aCadence;
-        // public System.Threading.Timer aCadence;
         public System.Windows.Forms.Timer aCadence;
 
-        // Cadence 
+        // Cadence background worker
         private readonly BackgroundWorker CadenceWorker;
-
-        // Delegates
-        public delegate void StatDelegate();
 
         public Form1()
         {
@@ -71,7 +66,9 @@ namespace ActiveSim
 
         }
 
-        // Class for the public global variables
+        /// <summary>
+        /// Class for the public global variables
+        /// </summary>
         public static class Globals
         {
             public static string sAppName = "ActiveSim";
@@ -174,25 +171,25 @@ namespace ActiveSim
 
             // Init the AW API
             Stat(1, "API Init", "Initializing the AW API.", "black");
-            _instance = new Instance();
+            m_bot = new Instance();
 
             // Install events & callbacks
             Stat(1, "API Init", "Installing events and callbacks.", "black");
-            _instance.EventAvatarAdd += OnEventAvatarAdd;
-            _instance.EventAvatarDelete += OnEventAvatarDelete;
-            _instance.EventChat += OnEventChat;
-            _instance.EventHudClick += OnEventHUDClick;
-            _instance.EventObjectClick += OnEventObjectClick;
+            m_bot.EventAvatarAdd += OnEventAvatarAdd;
+            m_bot.EventAvatarDelete += OnEventAvatarDelete;
+            m_bot.EventChat += OnEventChat;
+            m_bot.EventHudClick += OnEventHUDClick;
+            m_bot.EventObjectClick += OnEventObjectClick;
 
             // Set universe login parameters
-            _instance.Attributes.LoginName = Globals.sBotName;
-            _instance.Attributes.LoginOwner = Globals.iCitNum;
-            _instance.Attributes.LoginPrivilegePassword = Globals.sPassword;
-            _instance.Attributes.LoginApplication = Globals.sBotDesc;
+            m_bot.Attributes.LoginName = Globals.sBotName;
+            m_bot.Attributes.LoginOwner = Globals.iCitNum;
+            m_bot.Attributes.LoginPrivilegePassword = Globals.sPassword;
+            m_bot.Attributes.LoginApplication = Globals.sBotDesc;
 
             // Log into universe
             Stat(1, "Universe Login", "Entering universe.", "black");
-            var rc = _instance.Login();
+            var rc = m_bot.Login();
             if (rc != Result.Success)
             {
                 Stat(1, "Error", "Failed to log in to universe (reason: " + rc + ").", "red");
@@ -223,11 +220,6 @@ namespace ActiveSim
             aTimer.Start();
         }
 
-        private void OnCallbackEnter(IInstance sender, Result result)
-        {
-            throw new NotImplementedException();
-        }
-
         private void butLoginWorld_Click(object sender, EventArgs e)
         {
 
@@ -250,11 +242,11 @@ namespace ActiveSim
             butLogOut.Enabled = false;
 
             // Prepare caretakermode
-            _instance.Attributes.EnterGlobal = true;
+            m_bot.Attributes.EnterGlobal = true;
 
             // Enter world
             Stat(1, "World Login", "Logging into world " + Globals.sWorld + ".", "black");
-            var rc = _instance.Enter(Globals.sWorld);
+            var rc = m_bot.Enter(Globals.sWorld);
             
             if (rc != Result.Success)
             {
@@ -270,13 +262,13 @@ namespace ActiveSim
 
             // Commit the positioning and become visible
             Stat(1, "World Pos", "Changing position in world.", "black");
-            _instance.Attributes.MyX = Globals.iXPos;
-            _instance.Attributes.MyY = Globals.iYPos;
-            _instance.Attributes.MyZ = Globals.iZPos;
-            _instance.Attributes.MyYaw = Globals.iYaw;
-            _instance.Attributes.MyType = Globals.iAV;
+            m_bot.Attributes.MyX = Globals.iXPos;
+            m_bot.Attributes.MyY = Globals.iYPos;
+            m_bot.Attributes.MyZ = Globals.iZPos;
+            m_bot.Attributes.MyYaw = Globals.iYaw;
+            m_bot.Attributes.MyType = Globals.iAV;
 
-            rc = _instance.StateChange();
+            rc = m_bot.StateChange();
             if (rc == Result.Success)
             {
                 Stat(1, "World Pos", "Movement successful.", "black");
@@ -318,8 +310,8 @@ namespace ActiveSim
             
 
             // Dispose of the API instance, reset all flags
-            _instance.HudClear(0);
-            _instance.Dispose();
+            m_bot.HudClear(0);
+            m_bot.Dispose();
             Utility.Wait(0);
             Stat(1, "Logout", "Logged out.", "black");
             Globals.iInUniv = false;
@@ -345,9 +337,9 @@ namespace ActiveSim
         {
             // Read the input box
             string send = txtSendChat.Text;
-            _instance.Say(send);
+            m_bot.Say(send);
             Stat(1, "Chat", "Sent chat text to chat window", "black");
-            Chat(1, _instance.Attributes.LoginName, send, "black");
+            Chat(1, m_bot.Attributes.LoginName, send, "black");
         }
 
         private void butSimStart_Click(object sender, EventArgs e)
@@ -375,20 +367,38 @@ namespace ActiveSim
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
-            // Turn off & kill Cadence (if running)
+            // Turn off & kill Cadence and the (if running)
             if (Globals.iCadenceOn == true)
             {
-                aCadence.Stop();
+                try
+                {
+                    aCadence.Stop();
+                    aTimer.Stop();
+                }
+                catch
+                {
+
+                }
                 //aCadence.Change(Timeout.Infinite, Timeout.Infinite);
                 Stat(1, "Cadence", "Cadence turned off", "black");
                 Globals.iCadenceOn = false;
             }
+            
+            // Kill everything else
+            try
+            {
+                m_bot.HudClear(0);
+                m_bot.Exit();
+                Utility.Wait(0);
+                m_bot.Dispose();
+                Globals.m_db.Close();
+            }
+            catch
+            {
 
-            // turn off HUD
-            //_instance.HudClear(0);c
+            }
             Stat(1, "Logout", "Logged out.", "black");
-            Globals.iInUniv = false;
-            Globals.m_db.Close();
+            
             //_instance.Dispose();
             //Utility.Wait(0);
 
@@ -426,7 +436,7 @@ namespace ActiveSim
             Globals.StatMessage = message;
             Globals.StatColor = color;
 
-            if (ControlInvokeRequired(StatMon, () => ExecStat())) return;
+            //if (ControlInvokeRequired(StatMon, () => ExecStat())) return;
 
             DateTime now = DateTime.Now;
             string dt = String.Format("{0:M/d/yyyy - HH:mm:ss}", now);
@@ -445,7 +455,7 @@ namespace ActiveSim
 
         }
 
-        private void ExecStat()
+        /* private void ExecStat()
         {
             DateTime now = DateTime.Now;
             string dt = String.Format("{0:M/d/yyyy - HH:mm:ss}", now);
@@ -477,6 +487,7 @@ namespace ActiveSim
 
             return true;
         }
+        */
 
 
     }
