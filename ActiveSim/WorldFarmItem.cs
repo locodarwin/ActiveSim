@@ -144,8 +144,11 @@ namespace ActiveSim
             // If it's time to update the crop to the next stage, do so
             if (pCadenceCounter >= pStageTime[pCurrentStage - 1])
             {
-
-                Form1.m_bot.Say("Updating object " + pObjectID + " for stage " + (pCurrentStage + 1) + " of " + Stages);
+                if (Form1.Globals.Debug == true)
+                {
+                    Form1.m_bot.Say("Updating object " + pObjectID + " for stage " + (pCurrentStage + 1) + " of " + Stages);
+                }
+                
                 // Query the object to make sure we're looking at the right one
                 Form1.m_bot.Attributes.ObjectNumber = 0;
                 Form1.m_bot.Attributes.ObjectId = pObjectID;
