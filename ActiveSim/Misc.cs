@@ -474,7 +474,30 @@ namespace ActiveSim
 
         }
 
+        private int GetAssetNum(string Name)
+        {
+            int AssetNum = 0;
+            string sql = "select * from Items where Name = '" + Name + "'";
+            SQLiteCommand sqlcmd = new SQLiteCommand(sql, Form1.Globals.m_db);
+            SQLiteDataReader reader = sqlcmd.ExecuteReader();
 
+            // Do we have any entries for this assetnum?
+            if (reader.HasRows == false)
+            {
+                // We've got no rows returned! Respond back with this fact and don't add anything.
+                Stat(1, "AddInv", "Asset " + Name + " was not found in the database.", "red");
+                return 0;
+            }
+
+            while (reader.Read())
+            {
+                AssetNum = Convert.ToInt32(reader["AssetNum"]);
+            }
+            reader.Close();
+
+
+            return AssetNum;
+        }
 
     }
 }

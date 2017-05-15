@@ -436,7 +436,7 @@ namespace ActiveSim
             Globals.StatMessage = message;
             Globals.StatColor = color;
 
-            //if (ControlInvokeRequired(StatMon, () => ExecStat())) return;
+            if (ControlInvokeRequired(StatMon, () => ExecStat())) return;
 
             DateTime now = DateTime.Now;
             string dt = String.Format("{0:M/d/yyyy - HH:mm:ss}", now);
@@ -455,7 +455,7 @@ namespace ActiveSim
 
         }
 
-        /* private void ExecStat()
+        private void ExecStat()
         {
             DateTime now = DateTime.Now;
             string dt = String.Format("{0:M/d/yyyy - HH:mm:ss}", now);
@@ -487,7 +487,7 @@ namespace ActiveSim
 
             return true;
         }
-        */
+        
 
 
     }
