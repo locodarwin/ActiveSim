@@ -57,12 +57,18 @@ namespace ActiveSim
 
 
             // Update all of the Farming objects
-            foreach (WorldFarmItem d in Globals.WorldFarmItemList)
+            try
             {
-                //string q = "Updating object " + d.ObjectID.ToString() + 
-                d.Update();
+                foreach (WorldFarmItem d in Globals.WorldFarmItemList)
+                {
+                    d.Update();
+                }
+            }
+            catch
+            {
 
             }
+            
 
             // Stop the stopwatch
             sw.Stop();

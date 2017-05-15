@@ -208,11 +208,102 @@ namespace ActiveSim
             string Name = sender.Attributes.AvatarName;
             int ObjID = sender.Attributes.ObjectId;
             int iSess = sender.Attributes.AvatarSession;
+            int Citnum = GetCitnum(Name);
+
+            
+            // Check for harvestable, if so then remove object and add to player inventory, kill the object
+            //foreach (WorldFarmItem f in Globals.WorldFarmItemList)
+            for (int i = Globals.WorldFarmItemList.Count - 1; i >= 0; i--)
+            {
+                if (Globals.WorldFarmItemList[i].ObjectID == ObjID && Globals.WorldFarmItemList[i].Harvestable == true)
+                {
+                    // Remove object from world
+                    m_bot.Attributes.ObjectNumber = 0;
+                    m_bot.Attributes.ObjectId = Globals.WorldFarmItemList[i].ObjectID;
+                    m_bot.ObjectDelete();
+
+                    // Get produce
+                    //m_bot.Say("YieldProductAmount: " + Globals.WorldFarmItemList[i].YieldProductAmount + "\tYieldSeedAmount: " + Globals.WorldFarmItemList[i].YieldSeedAmount);
+                    string[] a = Globals.WorldFarmItemList[i].YieldProductAmount.Split('-');
+                    Random r = new Random();
+                    int produce = r.Next(Convert.ToInt32(a[0]), Convert.ToInt32(a[1]));
+                    int iproduce = Convert.ToInt32(Globals.WorldFarmItemList[i].YieldProduct);
+
+                    // Get seeds
+                    string[] b = Globals.WorldFarmItemList[i].YieldSeedAmount.Split('-');
+                    Random r2 = new Random();
+                    int seeds = r2.Next(Convert.ToInt32(b[0]), Convert.ToInt32(b[1]));
+                    int iseed = Convert.ToInt32(Globals.WorldFarmItemList[i].YieldSeed);
+
+                    m_bot.Say("Gave session " + iSess + " produce: " + produce + " and seeds: " + seeds + ".");
+
+                    // Remove the object from the list
+                    Globals.WorldFarmItemList.RemoveAt(i);
+
+
+                    // Update player inv with produce and seed
+                    // Give to citnum
+                    try
+                    {
+                        //int iproduce = GetAssetNum(sproduce);
+                        //int iseed = GetAssetNum(sseed);
+                        bool rc = AddAssetToInv(Citnum, iproduce, produce);
+                        rc = AddAssetToInv(Citnum, iseed, seeds);
+
+                        //if (rc == true)
+                        //{
+                        //    Response(iSess, iType, "Assetnum " + cmd[2] + ", quantity " + cmd[3] + ", given to " + cmd[1]);
+                        //}
+                        //else
+                        //{
+                        //    Response(iSess, iType, "Failed: AssetNum " + cmd[2] + ", quantity " + cmd[3] + ", was not given to " + cmd[1]);
+                        //}
+                    }
+                    catch
+                    {
+                        //Response(iSess, iType, "Failed: AssetNum " + cmd[2] + ", quantity " + cmd[3] + ", was not given to " + cmd[1]);
+                    }
+
+
+                }
+            }
+
+
 
             // Check to see if the user (session) has the plant flag on
             if (GetPlantFlag(iSess) == true)
             {
+                // Check to make sure the clicked object isn't already planted
+                foreach (WorldFarmItem f in Globals.WorldFarmItemList)
+                {
+                    if (f.ObjectID == ObjID)
+                    {
+                        StatusHUD(iSess, "Already planted");
+
+                        // Turm plant HUD blink off
+                        m_bot.Attributes.HudElementType = AW.HudType.Image;
+                        m_bot.Attributes.HudElementText = "/hud/plant-yes.jpg";
+                        m_bot.Attributes.HudElementId = 4;
+                        m_bot.Attributes.HudElementSession = iSess;
+                        m_bot.Attributes.HudElementOrigin = AW.HudOrigin.Left;
+                        m_bot.Attributes.HudElementOpacity = 1.0f;
+                        m_bot.Attributes.HudElementX = 64;
+                        m_bot.Attributes.HudElementY = 0;
+                        m_bot.Attributes.HudElementZ = 2;
+                        m_bot.Attributes.HudElementFlags = AW.HudElementFlag.Clicks;
+                        m_bot.Attributes.HudElementColor = 0xFFFFFF;
+                        m_bot.Attributes.HudElementSizeX = 64;
+                        m_bot.Attributes.HudElementSizeY = 64;
+
+                        m_bot.HudCreate();
+                        PlantFlagUpdate(iSess, "no");
+                        return;
+                    }
+                }
+                
+                
                 // Check to see if the user clicked tilled soil
+
                 string tModel = "";
                 Form1.m_bot.Attributes.ObjectNumber = 0;
                 Form1.m_bot.Attributes.ObjectId = ObjID;

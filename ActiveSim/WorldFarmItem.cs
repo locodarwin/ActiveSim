@@ -24,14 +24,31 @@ namespace ActiveSim
         public List<string> StageTime { get; set; }          // list of stage durations for the stages
         public string Fertilizer { get; set; }
         public string YieldProduct { get; set; }
-        public int YieldProductAmount { get; set; }
+        public string YieldProductAmount { get; set; }
         public string YieldSeed { get; set; }
-        public int YieldSeedAmount { get; set; }
+        public string YieldSeedAmount { get; set; }
         private string pGUID;
         private int pCurrentStage;
         private int pCadenceCounter;
         private int pObjectID;
+        private bool pHarvestable;
         private List<int> pStageTime = new List<int>();
+
+        public int ObjectID
+        {
+            get
+            {
+                return pObjectID;
+            }
+        }
+
+        public bool Harvestable
+        {
+            get
+            {
+                return pHarvestable;
+            }
+        }
 
         // Constructor
         public WorldFarmItem()
@@ -61,6 +78,9 @@ namespace ActiveSim
 
             // Set internal object ID
             pObjectID = objid;
+
+            // Set the harvestable flag to false
+            pHarvestable = false;
             //Console.WriteLine("ObjectID: " + pObjectID);
 
             // Pull the data for this new farm item from the CropTable query results
@@ -73,9 +93,9 @@ namespace ActiveSim
                 tStageTime = reader["StageTime"].ToString();
                 Fertilizer = reader["Fertilizer"].ToString();
                 YieldProduct = reader["YieldProduct"].ToString();
-                YieldProductAmount = Convert.ToInt32(reader["YieldProductAmount"]);
+                YieldProductAmount = reader["YieldProductAmount"].ToString();
                 YieldSeed = reader["YieldSeed"].ToString();
-                YieldSeedAmount = Convert.ToInt32(reader["YieldSeedAmount"]);
+                YieldSeedAmount = reader["YieldSeedAmount"].ToString();
             }
             reader.Close();
 
@@ -168,6 +188,10 @@ namespace ActiveSim
                 Form1.m_bot.ObjectChange();
 
                 pCurrentStage = pCurrentStage + 1;
+                if (pCurrentStage == Stages)
+                {
+                    pHarvestable = true;
+                }
 
             }
 
